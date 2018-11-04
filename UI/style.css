@@ -526,7 +526,6 @@ fieldset {
 .order-row:hover {
   background-color: rgb(223, 223, 223);
   box-shadow: 0px 1px 8px 0px black;
-  font-size: 17px;
   cursor: pointer;
 }
 

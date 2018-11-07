@@ -14,12 +14,26 @@ app.get(v1, (req, res) => {
     res.send('SendIT API Root');
 });
 
+// GET /parcels/:id
+app.get(`${v1}/parcels/:id`, (req, res) => {
+    let parcelId = parseInt(req.params.id, 10);
+    let matchedParcel = _.findWhere(parcels, {
+        id: parcelId
+    });
+
+    if (matchedParcel) {
+        res.json(matchedParcel);
+    } else {
+        res.status(404).send();
+    }
+});
+
 // GET /parcels
 app.get(`${v1}/parcels`, (req, res) => {
-    +
     res.json(parcels);
 });
 
+// POST /parcels
 app.post(`${v1}/parcels`, (req, res) => {
     // Pick only these specified inputs from user
     let body = _.pick(req.body, 'sender', 'receiver', 'pickup_location', 'destination', 'item');
@@ -35,6 +49,9 @@ app.post(`${v1}/parcels`, (req, res) => {
     body.pickup_location = body.pickup_location.trim();
     body.destination = body.destination.trim();
     body.item = body.item.trim();
+
+    // Add status field to the object
+    body.status = "Not delivered";
 
     // Add id field to the object
     body.id = parcelNextId++;

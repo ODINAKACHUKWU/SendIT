@@ -6,14 +6,36 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const v1 = '/api/v1';
 let parcels = [{
-    "sender": "Solomon Wilson",
-    "receiver": "Kelvin",
-    "pickup_location": "12 Lagoon Street",
-    "destination": "4 Agip Street",
-    "item": "CD",
-    "status": "Delivered",
-    "id": 0
-}];
+        "sender": "Solomon Wilson",
+        "receiver": "Kelvin",
+        "pickup_location": "12 Lagoon Street",
+        "destination": "4 Agip Street",
+        "item": "CD",
+        "status": "Delivered",
+        "id": 0,
+        "user": 0
+    },
+    {
+        "sender": "Adam Smith",
+        "receiver": "Bright",
+        "pickup_location": "12 Lagoon Street",
+        "destination": "4 Agip Street",
+        "item": "CD",
+        "status": "Delivered",
+        "id": 0,
+        "user": 1
+    },
+    {
+        "sender": "Adam Smith",
+        "receiver": "Emeka",
+        "pickup_location": "12 Lagoon Street",
+        "destination": "4 Agip Street",
+        "item": "CD",
+        "status": "Delivered",
+        "id": 0,
+        "user": 1
+    }
+];
 let users = [];
 let parcelNextId = 1;
 let userNextId = 1;
@@ -26,7 +48,8 @@ let userNextId = 1;
 //     destination,
 //     item,
 //     status,
-//     id
+//     id,
+//     user
 // }
 
 // User props
@@ -99,7 +122,7 @@ app.put(`${v1}/parcels/:id/cancel`, (req, res) => {
         return res.status(404).send();
     } else if (matchedParcel.status === "Not delivered") {
         validAttribute.status = "Cancelled";
-    } 
+    }
 
     _.extend(matchedParcel, validAttribute);
     res.json(matchedParcel);
@@ -114,6 +137,20 @@ app.get(`${v1}/parcels/:id`, (req, res) => {
 
     if (matchedParcel) {
         res.json(matchedParcel);
+    } else {
+        res.status(404).send();
+    }
+});
+
+// GET /users/:id/parcels
+app.get(`${v1}/users/:id/parcels`, (req, res) => {
+    let userId = parseInt(req.params.id, 10);
+    let matchedParcels = _.where(parcels, {
+        user: userId
+    });
+
+    if (matchedParcels) {
+        res.json(matchedParcels);
     } else {
         res.status(404).send();
     }

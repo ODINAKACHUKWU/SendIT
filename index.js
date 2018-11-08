@@ -5,7 +5,15 @@ const _ = require('underscore');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const v1 = '/api/v1';
-let parcels = [];
+let parcels = [{
+	"sender": "Solomon Wilson    ",
+	"receiver": "Kelvin",
+	"pickup_location": "12 Lagoon Street",
+	"destination": "4 Agip Street",
+    "item": "CD",
+    "status": "Delivered",
+    "id": 0
+}];
 let users = [];
 let parcelNextId = 1;
 let userNextId = 1;
@@ -34,6 +42,24 @@ app.use(bodyParser.json());
 
 app.get(v1, (req, res) => {
     res.send('SendIT API Root');
+});
+
+// DELETE /parcels/:id
+app.delete(`${v1}/parcels/:id/delete`, (req, res) => {
+    let parcelId = parseInt(req.params.id, 10);
+    let matchedParcel = _.findWhere(parcels, {
+        id: parcelId
+    });
+    let body = _.pick(matchedParcel, 'status');
+
+    if (!matchedParcel) {
+        res.status(404).json(`error: no parcel found with id ${parcelId}`);
+    } else if (body.status === "Not delivered") {
+        res.status(401).json("Parcel is not delivered yet!");
+    } else if (body.status === "Delivered") {
+        parcels = _.without(parcels, matchedParcel);
+        res.json(`Parcel with id: ${parcelId} deleted!`);
+    }
 });
 
 // GET /parcels/:id

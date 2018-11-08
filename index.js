@@ -6,7 +6,29 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const v1 = '/api/v1';
 let parcels = [];
-let parcelNextId = 1
+let users = [];
+let parcelNextId = 1;
+let userNextId = 1;
+
+// Parcel props
+// {
+//     sender,
+//     receiver,
+//     pickup_location,
+//     destination,
+//     item,
+//     status,
+//     id
+// }
+
+// User props
+// {
+//     name,
+//     phone_number,
+//     email,
+//     password,
+//     id
+// }
 
 app.use(bodyParser.json());
 
@@ -31,6 +53,11 @@ app.get(`${v1}/parcels/:id`, (req, res) => {
 // GET /parcels
 app.get(`${v1}/parcels`, (req, res) => {
     res.json(parcels);
+});
+
+// GET /users
+app.get(`${v1}/users`, (req, res) => {
+    res.json(users);
 });
 
 // POST /parcels
@@ -60,7 +87,7 @@ app.post(`${v1}/parcels`, (req, res) => {
     parcels.push(body);
 
     // Send user info back to user
-    res.json(body);
+    res.status(201).json(body);
 });
 
 app.listen(PORT, () => {

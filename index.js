@@ -6,10 +6,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const v1 = '/api/v1';
 let parcels = [{
-	"sender": "Solomon Wilson    ",
-	"receiver": "Kelvin",
-	"pickup_location": "12 Lagoon Street",
-	"destination": "4 Agip Street",
+    "sender": "Solomon Wilson",
+    "receiver": "Kelvin",
+    "pickup_location": "12 Lagoon Street",
+    "destination": "4 Agip Street",
     "item": "CD",
     "status": "Delivered",
     "id": 0
@@ -60,6 +60,31 @@ app.delete(`${v1}/parcels/:id/delete`, (req, res) => {
         parcels = _.without(parcels, matchedParcel);
         res.json(`Parcel with id: ${parcelId} deleted!`);
     }
+});
+
+// PUT /parcels/:id/destination
+app.put(`${v1}/parcels/:id/destination`, (req, res) => {
+    let parcelId = parseInt(req.params.id, 10);
+    let matchedParcel = _.findWhere(parcels, {
+        id: parcelId
+    });
+    let body = _.pick(req.body, 'destination');
+    let validAttribute = {};
+
+    if (!matchedParcel) {
+        return res.status(404).send();
+    }
+
+    if (body.hasOwnProperty('destination') && _.isString(body.destination) && body.destination.trim().length > 0 && matchedParcel.status === "Not delivered") {
+        validAttribute.destination = body.destination;
+    } else if (body.hasOwnProperty('destination') && matchedParcel.status === "Delivered") {
+        return res.status(400).send("Parcel delivered");
+    }
+
+    validAttribute.destination = validAttribute.destination.trim();
+
+    _.extend(matchedParcel, validAttribute);
+    res.json(matchedParcel);
 });
 
 // GET /parcels/:id

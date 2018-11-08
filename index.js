@@ -87,6 +87,24 @@ app.put(`${v1}/parcels/:id/destination`, (req, res) => {
     res.json(matchedParcel);
 });
 
+// PUT /parcels/:id/cancel
+app.put(`${v1}/parcels/:id/cancel`, (req, res) => {
+    let parcelId = parseInt(req.params.id, 10);
+    let matchedParcel = _.findWhere(parcels, {
+        id: parcelId
+    });
+    let validAttribute = {};
+
+    if (!matchedParcel) {
+        return res.status(404).send();
+    } else if (matchedParcel.status === "Not delivered") {
+        validAttribute.status = "Cancelled";
+    } 
+
+    _.extend(matchedParcel, validAttribute);
+    res.json(matchedParcel);
+});
+
 // GET /parcels/:id
 app.get(`${v1}/parcels/:id`, (req, res) => {
     let parcelId = parseInt(req.params.id, 10);

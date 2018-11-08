@@ -50,6 +50,20 @@ app.get(`${v1}/parcels/:id`, (req, res) => {
     }
 });
 
+// GET /users/:id
+app.get(`${v1}/users/:id`, (req, res) => {
+    let userId = parseInt(req.params.id, 10);
+    let matchedUser = _.findWhere(users, {
+        id: userId
+    });
+
+    if (matchedUser) {
+        res.json(matchedUser);
+    } else {
+        res.status(404).send();
+    }
+});
+
 // GET /parcels
 app.get(`${v1}/parcels`, (req, res) => {
     res.json(parcels);

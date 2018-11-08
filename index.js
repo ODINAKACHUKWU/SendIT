@@ -80,7 +80,7 @@ app.post(`${v1}/parcels`, (req, res) => {
     let body = _.pick(req.body, 'sender', 'receiver', 'pickup_location', 'destination', 'item');
 
     // Validate user inputs
-    if (!_.isString(body.sender, body.receiver, body.pickup_location, body.destination, body.item) || body.sender.trim().length === 0 || body.receiver.trim().length === 0 || body.pickup_location.trim().length === 0 || body.destination.trim().length === 0 || body.item.trim().length === 0) {
+    if (!_.isString(body.sender) || !_.isString(body.receiver) || !_.isString(body.pickup_location) || !_.isString(body.destination) || !_.isString(body.item) || body.sender.trim().length === 0 || body.receiver.trim().length === 0 || body.pickup_location.trim().length === 0 || body.destination.trim().length === 0 || body.item.trim().length === 0) {
         return res.status(400).send();
     }
 

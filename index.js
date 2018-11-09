@@ -12,7 +12,7 @@ let parcels = [{
   destination: '4 Agip Street',
   item: 'CD',
   status: 'Delivered',
-  id: 0,
+  id: 1,
   user: 0,
 },
 {
@@ -22,7 +22,7 @@ let parcels = [{
   destination: '4 Agip Street',
   item: 'CD',
   status: 'Delivered',
-  id: 0,
+  id: 2,
   user: 1,
 },
 {
@@ -32,7 +32,7 @@ let parcels = [{
   destination: '4 Agip Street',
   item: 'CD',
   status: 'Delivered',
-  id: 0,
+  id: 3,
   user: 1,
 },
 ];

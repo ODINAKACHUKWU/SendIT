@@ -4,7 +4,7 @@
   "description": "This is a courier service that helps users deliver parcels to different destinations. SendIT provides courier quotes based on weight categories.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --timeout 10000 --recursive"
   },
   "repository": {
     "type": "git",
@@ -22,9 +22,12 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
     "eslint": "^5.8.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0"
   },
   "keywords": []
 }

@@ -39,27 +39,6 @@ let parcels = [{
 const users = [];
 let parcelNextId = 1;
 
-// Parcel props
-// {
-//     sender,
-//     receiver,
-//     pickup_location,
-//     destination,
-//     item,
-//     status,
-//     id,
-//     user
-// }
-
-// User props
-// {
-//     name,
-//     phone_number,
-//     email,
-//     password,
-//     id
-// }
-
 app.use(bodyParser.json());
 
 app.get(v1, (req, res) => {

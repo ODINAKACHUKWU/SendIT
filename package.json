@@ -20,5 +20,11 @@
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "underscore": "^1.8.3"
-  }
+  },
+  "devDependencies": {
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  },
+  "keywords": []
 }

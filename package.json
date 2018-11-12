@@ -4,8 +4,8 @@
   "description": "This is a courier service that helps users deliver parcels to different destinations. SendIT provides courier quotes based on weight categories.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "mocha --timeout 10000 --recursive"
+    "start": "nodemon --exec babel-node server/index.js",
+    "test": "mocha --compilers js:@babel/register test/test.js --exit"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,12 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
+    "@babel/register": "^7.0.0",
+    "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "eslint": "^5.8.0",

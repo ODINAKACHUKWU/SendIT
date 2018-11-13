@@ -15,38 +15,6 @@ body {
   position: relative;
 }
 
-.main-header {
-  margin: 0;
-  background-color: #1b1464;
-}
-
-.nav-bar {
-  display: -webkit-flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 20px 0px;
-}
-
-.nav-bar a:first-child {
-  margin-right: auto;
-  margin-left: 100px;
-}
-
-.nav-bar a:first-child {
-  margin-right: auto;
-  margin-left: 100px;
-}
-
-.nav-bar a:first-child+a+a {
-  margin-right: 100px;
-  margin-left: 20px;
-}
-
-.logo {
-  width: 100px;
-  height: auto;
-}
-
 #sign-in,
 #sign-up,
 #sign-up2,
@@ -80,29 +48,17 @@ body {
   opacity: 0.8;
 }
 
-.main-content,
 .dash-content {
   margin: 0;
   display: block;
   background-color: white;
-}
-
-.main-content {
-  padding-top: 70px;
-}
-
-.section-one,
-.dash-section {
-  display: -webkit-flex;
-  flex-direction: row;
-}
-
-.dash-content {
   padding: 15px;
   border-top: solid 2px #1b1464;
 }
 
 .dash-section {
+  display: -webkit-flex;
+  flex-direction: row;
   width: 100%;
   padding: 0;
 }
@@ -119,7 +75,6 @@ body {
   float: left;
   width: 50%;
   padding-left: 100px;
-  align-self: center;
   text-align: left;
 }
 
@@ -139,6 +94,7 @@ section.left>h1 {
   font-size: 2.8em;
   padding-bottom: 10px;
   color: #1b1464;
+  padding-top: 100px;
 }
 
 section.left>p {
@@ -533,4 +489,115 @@ fieldset {
 .head {
   background-color: rgb(0, 29, 116);
   color: white;
+}
+
+/* ===================================
+              Media query 
+  ================================== */
+
+/* Landscape view */
+@media screen and (min-width: 768px) {
+
+  .main-header {
+    margin: 0;
+    display: -webkit-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px 0px;
+    background-color: #1b1464;
+  }
+  
+  .main-header a:first-child {
+    margin-right: auto;
+    margin-left: 100px;
+  }
+  
+  .main-header a:first-child+a+a {
+    margin-right: 100px;
+    margin-left: 20px;
+  }
+  
+  .logo {
+    width: 100px;
+    height: auto;
+  }
+
+  .section-one {
+    position: absolute;
+    display: -webkit-flex;
+    flex-direction: row;
+  }
+
+  .right {
+    padding-top: 70px;
+  }
+
+  .left {
+    padding-top: 50px;
+  }
+} 
+
+/* Portrait view */
+@media screen and (max-width: 768px) {
+
+  .main-header {
+    display: -webkit-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #1b1464;
+    padding: 20px;
+  }
+
+  #sign-up {
+    display: none;
+  }
+
+  #sign-in {
+    border: none;
+  }
+  
+  .main-header a:first-child+a+a {
+    display: block;
+  }
+
+  .logo {
+    width: 80px;
+    height: auto;
+  }
+
+  .section-one {
+    display: block;
+  }
+
+  .right {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .left {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+  }
+
+  section.left>h1 {
+    margin: 0;
+    font-size: 2em;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    color: #1b1464;
+  }
+  
+  section.left>p {
+    margin: 0;
+    font-size: 1.2em;
+    padding-bottom: 30px;
+  }
+
+  .main-footer>p {
+    margin: 0;
+    color: white;
+    align-self: center;
+    font-size: 12px;
+  }
 }

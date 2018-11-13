@@ -20,7 +20,7 @@ body {
 #sign-up2,
 #cdelivery,
 #logout,
-#signup {
+#signup-btn {
   font-size: 14px;
   border-radius: 50px;
   color: white;
@@ -131,7 +131,11 @@ form {
   height: auto;
   border: 3px solid #f1f1f1;
   border-radius: 12px;
-  margin-bottom: 30px;
+}
+
+#signup {
+  background-color: white;
+  border: 1px solid #f1f1f1;
 }
 
 .login-form {
@@ -163,7 +167,7 @@ input[type="tel"] {
   color: #1b1464;
 }
 
-#signup {
+#signup-btn {
   margin-right: 100px;
 }
 
@@ -183,15 +187,6 @@ input[type="tel"] {
   width: 100%;
 }
 
-.cancelbtn {
-  width: auto;
-  padding: 10px 18px;
-  background-color: orangered;
-  border: none;
-  cursor: pointer;
-}
-
-.cancel-btn,
 .signupbtn {
   background-color: #1b1464;
   color: white;
@@ -199,19 +194,18 @@ input[type="tel"] {
   margin: 8px 0;
   border: none;
   cursor: pointer;
-  width: 100%;
-  opacity: 0.9;
-  float: left;
   width: 50%;
+  border-radius: 10px;
 }
 
-.cancel-btn {
-  padding: 14px 20px;
-  background-color: orangered;
+.submit-section {
+  text-align: center;
 }
 
-.cancelbtn:hover,
-.cancel-btn:hover,
+.submit-section>a {
+  text-align: center;
+}
+
 .signupbtn:hover,
 #submit:hover {
   opacity: 0.8;
@@ -227,7 +221,11 @@ img.avatar {
 }
 
 .container {
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
+}
+
+.container>p {
+  text-align: center;
 }
 
 .foot-container {
@@ -249,6 +247,14 @@ span.psw {
 .main-body {
   background-color: #E8E8E8;
   padding: 20px;
+}
+
+.main-body>h1 {
+  color: #1b1464;
+  font-size: 1.8em;
+  text-align: center;
+  margin: 0px;
+  padding-bottom: 20px;
 }
 
 .login-footer {
@@ -630,8 +636,12 @@ fieldset {
     font-size: 12px;
   }
 
-  #signup {
+  #signup-btn {
     margin-right: 5px;
+  }
+
+  .signupbtn {
+    text-align: center;
   }
 
 }

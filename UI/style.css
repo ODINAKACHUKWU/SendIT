@@ -19,7 +19,8 @@ body {
 #sign-up,
 #sign-up2,
 #cdelivery,
-#logout {
+#logout,
+#signup {
   font-size: 14px;
   border-radius: 50px;
   color: white;
@@ -133,6 +134,14 @@ form {
   margin-bottom: 30px;
 }
 
+.login-form {
+  margin: auto;
+  max-width: 500px;
+  height: auto;
+  background-color: white;
+  border: 1px solid #f1f1f1;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -152,6 +161,10 @@ input[type="tel"] {
 
 .title {
   color: #1b1464;
+}
+
+#signup {
+  margin-right: 100px;
 }
 
 .logo2 {
@@ -230,12 +243,24 @@ span.psw {
 #link {
   color: dodgerblue;
   text-decoration: none;
+  float: right;
 }
 
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
+.main-body {
+  background-color: #E8E8E8;
+  padding: 20px;
+}
+
+.login-footer {
+  margin: 0;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: #1b1464;
+  text-align: center;
+  font-size: 14px;
+  padding: 20px;
+  color: white;
 }
 
 /* Style User Dashboard */
@@ -600,4 +625,13 @@ fieldset {
     align-self: center;
     font-size: 12px;
   }
+
+  .login-footer {
+    font-size: 12px;
+  }
+
+  #signup {
+    margin-right: 5px;
+  }
+
 }

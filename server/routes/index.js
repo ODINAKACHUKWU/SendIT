@@ -27,4 +27,10 @@ router.get('/users/:id', UserController.getSpecificUser);
 
 router.get('/users/:id/parcels', UserController.getUserParcels);
 
+router.post('/users', UserController.addUserAccount);
+
+router.put('/parcels/:id/deliver', UserController.changeStatus);
+
+router.put('parcels/:id/location', UserController.changeLocation);
+
 export default router;

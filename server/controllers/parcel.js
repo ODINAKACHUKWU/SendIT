@@ -1,7 +1,7 @@
 import _ from 'underscore';
-import parcels from '../db';
+import { parcels } from '../db';
 
-let lastCreatedParcelId = 3;
+let lastCreatedParcelId = parcels.length;
 
 class ParcelController {
   // GET /parcels
@@ -16,8 +16,12 @@ class ParcelController {
   // GET /parcels/:id
   static getSpecificParcel(req, res) {
     const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = _.findWhere(parcels, {
-      id: parcelId,
+    let matchedParcel;
+
+    parcels.forEach((parcel) => {
+      if (parcel.id === parcelId) {
+        matchedParcel = parcel;
+      }
     });
 
     if (matchedParcel) {
@@ -37,24 +41,30 @@ class ParcelController {
   // POST /parcels
   static createParcel(req, res) {
     // Pick only these specified inputs from user
-    const body = _.pick(req.body, 'sender', 'receiver', 'pickup_location', 'destination', 'item');
+    const body = _.pick(req.body, 'sender', 'receiver', 'pickupLocation', 'destination', 'item');
+    const {
+      sender, receiver, pickupLocation, destination, item,
+    } = body;
 
     // Validate user inputs
-    if (!_.isString(body.sender) || !_.isString(body.receiver)
-    || !_.isString(body.pickup_location) || !_.isString(body.destination)
-    || !_.isString(body.item) || body.sender.trim().length === 0
-    || body.receiver.trim().length === 0
-    || body.pickup_location.trim().length === 0
-    || body.destination.trim().length === 0 || body.item.trim().length === 0) {
+    if (!_.isString(sender) || !_.isString(receiver)
+    || !_.isString(pickupLocation) || !_.isString(destination)
+    || !_.isString(item) || sender.trim().length === 0
+    || receiver.trim().length === 0
+    || pickupLocation.trim().length === 0
+    || destination.trim().length === 0 || item.trim().length === 0) {
       return res.status(400).send();
     }
 
     // Remove spaces around user inputs
-    body.sender = body.sender.trim();
-    body.receiver = body.receiver.trim();
-    body.pickup_location = body.pickup_location.trim();
-    body.destination = body.destination.trim();
-    body.item = body.item.trim();
+    body.sender = sender.trim();
+    body.receiver = receiver.trim();
+    body.pickupLocation = pickupLocation.trim();
+    body.destination = destination.trim();
+    body.item = item.trim();
+
+    // Add location field
+    body.location = pickupLocation.trim();
 
     // Add status field to the object
     body.status = 'Not delivered';

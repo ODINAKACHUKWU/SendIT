@@ -16,8 +16,8 @@
     <!-- Header section -->
 
     <header class="main-header">
-            <a href="user-dashboard.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
-            <a href="index.html" id="logout">Log Out <i class="fa fa-sign-out"></i></a>
+        <a href="admin-dashboard.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
+        <a href="index.html" id="logout">Log Out <i class="fa fa-sign-out"></i></a>
     </header>
 
     <!-- Main content section -->
@@ -30,12 +30,11 @@
         <hr>
         <table class="orders-tab">
             <div class="icons">
-                <a href="#"><i class="fa fa-edit" title="Change destination"></i></a>
-                <a href="#"><i class="fa fa-times" title="Cancel Order"></i></a>
-                <a href="#"><i class="fa fa-trash" title="delete order"></i></a>
+                <a href="#"><i class="fa fa-edit" title="Edit"></i></a>
             </div>
             <tr class="orders-header">
                 <th><input type="checkbox" checked="checked" name="check"></th>
+                <th>Customer ID</th>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Order ID</th>
@@ -48,6 +47,7 @@
             </tr>
             <tr class="order-row">
                 <td><input type="checkbox" name="select"></td>
+                <td>03</td>
                 <td>23-Oct-18</td>
                 <td>10:00 AM</td>
                 <td>01</td>
@@ -60,6 +60,7 @@
             </tr>
             <tr class="order-row">
                 <td><input type="checkbox" name="select"></td>
+                <td>05</td>
                 <td>01-Nov-2018</td>
                 <td>1:00 PM</td>
                 <td>02</td>
@@ -68,10 +69,11 @@
                 <td>12-Nov-18; 9:00AM</td>
                 <td>Lagos State</td>
                 <td>1200</td>
-                <td id="red">Not delivered</td>
+                <td id="red">In transit</td>
             </tr>
             <tr class="order-row">
                 <td><input type="checkbox" name="select"></td>
+                <td>01</td>
                 <td>02-Nov-2018</td>
                 <td>12:00 PM</td>
                 <td>03</td>
@@ -80,7 +82,7 @@
                 <td>12-Nov-18; 10:00AM</td>
                 <td>Lagos State</td>
                 <td>800</td>
-                <td id="red">Not delivered</td>
+                <td id="red">In transit</td>
             </tr>
         </table>
 

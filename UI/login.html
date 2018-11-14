@@ -1,52 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+  <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>SendIT | Log In</title>
-  <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
-  <link rel="shortcut icon" href="images/favicon.ico">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SendIT | Log In</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
 
-<body>
+  <body>
 
-  <!-- Page Caption section -->
+      <!-- Page header section -->
+      
+      <header class="main-header">
+        <a href="index.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
+        <a href="signup.html" id="signup-btn">Sign Up <i class="fa fa-user-plus"></i></a>
+      </header>
 
-  <div class="title">
-    <h2>Sign In</h2>
-  </div>
+      <!-- Main body section -->
+      
+      <div class="main-body">
+        
+        <!-- Page Caption section -->
+        <h1>Sign In</h1>
 
-  <!-- Form section -->
+        <!-- Form section -->
 
-  <form action="user-dashboard.html">
-    <div class="imgcontainer">
-      <img src="images/Login-image.png" alt="Avatar" class="avatar">
-    </div>
+        <form action="user-dashboard.html" class="login-form">
+          <div class="imgcontainer">
+            <img src="images/Login-image.png" alt="Avatar" class="avatar">
+          </div>
 
-    <div class="container">
-      <label for="email"><i class="fa fa-envelope"></i> <b>Email:</b></label>
-      <input type="email" placeholder="Enter Email" name="email" required>
+          <div class="container">
+            <label for="email"><i class="fa fa-envelope"></i> <b>Email:</b>
+            <input type="email" placeholder="Enter Email" name="email" required>
+            </label>
 
-      <label for="psw"><i class="fa fa-unlock-alt"></i> <b>Password:</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
+            <label for="psw"><i class="fa fa-unlock-alt"></i> <b>Password:</b>
+            <input type="password" placeholder="Enter Password" name="psw" required>
+            </label>
 
-      <button type="submit" id="submit"><i class="fa fa-sign-in"></i> <b>Login</b></button>
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
-    </div>
+            <button type="submit" id="submit"><i class="fa fa-sign-in"></i> <b>Login</b></button>
+              <input type="checkbox" checked="checked" name="remember"> Remember me
+              <a href="#" id="link">Forgot password?</a>
+          </div>
+        </form>
+        
+      </div>
 
-    <!-- Form footer section -->
+      <!-- Footer section -->
 
-    <div class="foot-container">
-      <button type="button" class="cancelbtn">Cancel</button>
-      <span class="psw">Forgot <a href="#" id="link">password?</a></span>
-    </div>
-  </form>
+      <footer class="login-footer">
+        <p>&copy; Copyright 2018, SendIT Courier Services. All Rights Reserved.</p>
+      </footer>
 
-</body>
+  </body>
 
-</html>
+  </html>

@@ -1,0 +1,11 @@
+{
+    "env": {
+        "node": true,
+        "mocha": true
+    },
+    "extends": "airbnb-base",
+    "rules": {
+        "consistent-return": "off"
+      },
+    "parser": "babel-eslint"
+}

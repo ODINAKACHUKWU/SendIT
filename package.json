@@ -1,0 +1,40 @@
+{
+  "name": "sendit",
+  "version": "1.0.0",
+  "description": "This is a courier service that helps users deliver parcels to different destinations. SendIT provides courier quotes based on weight categories.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node server/index.js",
+    "test": "mocha --compilers js:@babel/register test/test.js --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ODINAKACHUKWU/SendIT.git"
+  },
+  "author": "Odinakachukwu Ezeobika",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ODINAKACHUKWU/SendIT/issues"
+  },
+  "homepage": "https://github.com/ODINAKACHUKWU/SendIT#readme",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
+    "@babel/register": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0"
+  },
+  "keywords": []
+}

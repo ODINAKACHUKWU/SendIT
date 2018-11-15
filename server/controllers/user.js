@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { users, parcels } from '../db';
 
 let lastCreatedUserId = users.length;
@@ -66,39 +65,53 @@ class UserController {
   // POST /users
   static addUserAccount(req, res) {
     // Pick only these specified inputs from user
-    const body = _.pick(req.body, 'firstName', 'lastName', 'phoneNumber', 'email', 'password');
+    const user = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      phoneNumber: req.body.phoneNumber,
+      email: req.body.email,
+      password: req.body.password,
+      role: req.body.role,
+    };
     const {
-      firstName, lastName, phoneNumber, email, password,
-    } = body;
+      firstName, lastName, phoneNumber, email, password, role,
+    } = user;
 
     // Validate user inputs
-    if (!_.isString(firstName) || !_.isString(lastName)
-    || !_.isNumber(phoneNumber) || !_.isString(email)
-    || !_.isString(password) || firstName.trim().length === 0
+    if (!isNaN(firstName) || !isNaN(lastName)
+    || !isNaN(email) || !isFinite(phoneNumber)
+    || !isNaN(password) || !isNaN(role) || firstName.trim().length === 0
     || lastName.trim().length === 0
     || phoneNumber.length === 0
-    || email.trim().length === 0 || password.trim().length === 0) {
-      return res.status(400).send();
+    || email.trim().length === 0
+    || role.trim().length === 0
+    || phoneNumber.toString().length < 4 || phoneNumber.toString().length > 13) {
+      return res.status(400).send({
+        status: 'Failure',
+        message: 'Invalid input',
+      });
     }
 
     // Remove spaces around user inputs
-    body.sender = firstName.trim();
-    body.receiver = lastName.trim();
-    body.destination = email.trim();
-    body.item = password.trim();
+    user.firstName = firstName.trim();
+    user.lastName = lastName.trim();
+    user.email = email.trim();
+    user.password = password.trim();
+    user.role = role.trim();
+    user.phoneNumber = `+${phoneNumber.trim()}`;
 
     // Add id field to the object
-    body.id = lastCreatedUserId + 1;
+    user.id = lastCreatedUserId + 1;
     lastCreatedUserId += 1;
 
     // Push body into array
-    users.push(body);
+    users.push(user);
 
     // Send user info back to user
     res.status(201).send({
       status: 'Success',
       message: 'Account Created',
-      data: body,
+      data: user,
     });
   }
 
@@ -141,33 +154,32 @@ class UserController {
   // PUT /parcels/:id/location
   static changeLocation(req, res) {
     const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = _.findWhere(parcels, {
-      id: parcelId,
-    });
+    const matchedParcel = parcels.filter(parcel => parcel.id === parcelId);
+    const location = req.body;
 
     if (!matchedParcel) {
-      res.status(404).send({
-        status: 'failure',
+      return res.status(404).send({
+        status: 'Failure',
         message: 'No parcel found',
       });
     }
 
-    if (matchedParcel.status === 'Delivered') {
+    if (location && matchedParcel.status === 'Delivered') {
       res.status(200).send({
         status: 'Success',
         message: 'Parcel has been delivered',
       });
-    } else if (matchedParcel.status === 'Cancelled') {
+    } else if (location && matchedParcel.status === 'Cancelled') {
       res.status(200).send({
         status: 'Success',
         message: 'Parcel has been cancelled',
       });
     }
 
-    if (req.body.location && _.isString(req.body.location)
-    && req.body.location.trim().length > 0
+    if (location && typeof (location) === 'string'
+    && location.trim().length > 0
     && matchedParcel.status === 'Not delivered') {
-      matchedParcel.location = req.body.location.trim();
+      matchedParcel.location = location.trim();
       res.status(200).send({
         status: 'Success',
         message: 'Location has been changed',

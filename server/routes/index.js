@@ -12,8 +12,6 @@ router.get('/parcels/:id', ParcelController.getSpecificParcel);
 
 router.post('/parcels', ParcelController.createParcel);
 
-router.delete('/parcels/:id/delete', ParcelController.deleteParcel);
-
 router.put('/parcels/:id/cancel', ParcelController.cancelParcel);
 
 router.put('/parcels/:id/destination', ParcelController.changeDestination);

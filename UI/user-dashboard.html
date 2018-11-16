@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SendIT | Dashboard</title>
-    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 768px)" href="style.css" />
     <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href="style.css" />
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -23,50 +23,61 @@
 
     <!-- Main content section -->
 
-    <main class="dash-content">
-        <div class="dash-section">
+    <main class="row">
+        <div class="col-100">
 
             <!-- Left menu section -->
-
-            <section class="dash-left">
-                <div class="menu">
-                    <a href="user-dashboard.html" class="active">Overview</a>
-                    <a href="orders.html">Orders</a>
-                    <a href="order-page.html">Create Delivery</a>
+            <div class="row">
+                <div class="col-25">
+                        <div class="menu">
+                                <a href="user-dashboard.html" class="active">Overview</a>
+                                <a href="orders.html">Orders</a>
+                                <a href="order-page.html">Create Delivery</a>
+                        </div>
                 </div>
-            </section>
 
-            <!-- Overview display section -->
-
-            <section class="dash-right">
-                <div class="heading">Overview</div><hr><br>
-                <div class="row">
-                    <table id="details">
-                        <tr>
-                            <th class="head">Items delivered</th>
-                        </tr>
-                        <tr>
-                            <td id="delivered">1</td>
-                        </tr>
-                    </table>
-                    <table id="details">
-                        <tr>
-                            <th class="head">Items in transit</th>
-                        </tr>
-                        <tr>
-                            <td id="transit">2</td>
-                        </tr>
-                    </table>
-                    <table id="details">
-                        <tr>
-                            <th class="head">Orders created</th>
-                        </tr>
-                        <tr>
-                            <td id="orders">3</td>
-                        </tr>
-                    </table>
+                <!-- Overview display section -->
+                
+                <div class="col-75">
+                    <div class="row">
+                        <div class="col-75, dash-head">
+                            Overview
+                        </div>
+                    </div>
+                    <div class="dash-tab">
+                        <div class="col-25">
+                            <table id="details">
+                                <tr>
+                                    <th class="head">Items delivered</th>
+                                </tr>
+                                <tr>
+                                    <td id="delivered">1</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-25">
+                            <table id="details">
+                                <tr>
+                                    <th class="head">Items in transit</th>
+                                </tr>
+                                <tr>
+                                    <td id="transit">2</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-25">
+                            <table id="details">
+                                <tr>
+                                    <th class="head">Orders created</th>
+                                </tr>
+                                <tr>
+                                    <td id="orders">3</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
     </main>
 

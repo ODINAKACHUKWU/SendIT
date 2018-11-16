@@ -1,6 +1,7 @@
 # SendIT
 
 [![Build Status](https://travis-ci.org/ODINAKACHUKWU/SendIT.svg?branch=develop)](https://travis-ci.org/ODINAKACHUKWU/SendIT)
+[![Coverage Status](https://coveralls.io/repos/github/ODINAKACHUKWU/SendIT/badge.svg?branch=develop)](https://coveralls.io/github/ODINAKACHUKWU/SendIT?branch=develop)
 
 This is a courier service that helps users deliver parcels to different destinations. SendIT provides courier quotes based on weight categories.
 

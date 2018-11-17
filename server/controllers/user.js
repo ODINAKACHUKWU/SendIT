@@ -119,7 +119,7 @@ class UserController {
   // PUT /parcels/:id/location
   static changeLocation(req, res) {
     const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = parcels.filter(parcel => parcel.id === parcelId);
+    const matchedParcel = parcels.find(parcel => parcel.id === parcelId);
     const location = req.body;
 
     if (!matchedParcel) {

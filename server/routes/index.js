@@ -31,6 +31,6 @@ router.post('/users', validUser, UserController.addUserAccount);
 
 router.put('/parcels/:id/deliver', UserController.changeStatus);
 
-router.put('parcels/:id/location', UserController.changeLocation);
+router.put('/parcels/:id/location', UserController.changeLocation);
 
 export default router;

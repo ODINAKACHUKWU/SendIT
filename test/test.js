@@ -1,8 +1,7 @@
+import chaiHttp from 'chai-http';
+import chai from 'chai';
 import myApp from '../server/index';
 import { parcels, users } from '../server/db';
-
-const chai = require('chai');
-const chaiHttp = require('chai-http');
 
 chai.should();
 
@@ -46,7 +45,7 @@ describe('Parcel API endpoints', () => {
       });
   });
 
-  it('should fetch return a notification message if parcel is not found', (done) => {
+  it('should return a notification message if parcel is not found', (done) => {
     chai.request(myApp)
       .put('/api/v1/parcels/10/cancel')
       .end((err, res) => {

@@ -64,42 +64,7 @@ class UserController {
 
   // POST /users
   static addUserAccount(req, res) {
-    // Pick only these specified inputs from user
-    const user = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      phoneNumber: req.body.phoneNumber,
-      email: req.body.email,
-      password: req.body.password,
-      role: req.body.role,
-    };
-    const {
-      firstName, lastName, phoneNumber, email, password, role,
-    } = user;
-
-    // Validate user inputs
-    if (!isNaN(firstName) || !isNaN(lastName)
-    || !isNaN(email) || !isFinite(phoneNumber)
-    || !isNaN(password) || !isNaN(role) || firstName.trim().length === 0
-    || lastName.trim().length === 0
-    || phoneNumber.length === 0
-    || email.trim().length === 0
-    || role.trim().length === 0
-    || phoneNumber.toString().length < 4 || phoneNumber.toString().length > 13) {
-      return res.status(400).send({
-        status: 'Failure',
-        message: 'Invalid input',
-      });
-    }
-
-    // Remove spaces around user inputs
-    user.firstName = firstName.trim();
-    user.lastName = lastName.trim();
-    user.email = email.trim();
-    user.password = password.trim();
-    user.role = role.trim();
-    user.phoneNumber = `+${phoneNumber.trim()}`;
-
+    const user = req.body;
     // Add id field to the object
     user.id = lastCreatedUserId + 1;
     lastCreatedUserId += 1;

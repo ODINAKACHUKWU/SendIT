@@ -1,7 +1,6 @@
-import _ from 'underscore';
-import parcels from '../db';
+import { parcels } from '../db';
 
-let lastCreatedParcelId = 3;
+let lastCreatedParcelId = parcels.length;
 
 class ParcelController {
   // GET /parcels
@@ -16,8 +15,12 @@ class ParcelController {
   // GET /parcels/:id
   static getSpecificParcel(req, res) {
     const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = _.findWhere(parcels, {
-      id: parcelId,
+    let matchedParcel;
+
+    parcels.forEach((parcel) => {
+      if (parcel.id === parcelId) {
+        matchedParcel = parcel;
+      }
     });
 
     if (matchedParcel) {
@@ -36,93 +39,61 @@ class ParcelController {
 
   // POST /parcels
   static createParcel(req, res) {
-    // Pick only these specified inputs from user
-    const body = _.pick(req.body, 'sender', 'receiver', 'pickup_location', 'destination', 'item');
-
-    // Validate user inputs
-    if (!_.isString(body.sender) || !_.isString(body.receiver)
-    || !_.isString(body.pickup_location) || !_.isString(body.destination)
-    || !_.isString(body.item) || body.sender.trim().length === 0
-    || body.receiver.trim().length === 0
-    || body.pickup_location.trim().length === 0
-    || body.destination.trim().length === 0 || body.item.trim().length === 0) {
-      return res.status(400).send();
-    }
-
-    // Remove spaces around user inputs
-    body.sender = body.sender.trim();
-    body.receiver = body.receiver.trim();
-    body.pickup_location = body.pickup_location.trim();
-    body.destination = body.destination.trim();
-    body.item = body.item.trim();
+    const parcel = req.body;
 
     // Add status field to the object
-    body.status = 'Not delivered';
+    parcel.status = 'Not delivered';
 
     // Add id field to the object
-    body.id = lastCreatedParcelId + 1;
+    parcel.id = lastCreatedParcelId + 1;
     lastCreatedParcelId += 1;
 
     // Push body into array
-    parcels.push(body);
+    parcels.push(parcel);
 
     // Send user info back to user
     res.status(201).send({
       status: 'Success',
       message: 'Parcel Created',
-      data: body,
+      data: parcel,
     });
-  }
-
-  // DEL /parcels/:id/delete
-  static deleteParcel(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = _.findWhere(parcels, {
-      id: parcelId,
-    });
-
-    if (!matchedParcel) {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'Parcel not found',
-      });
-    } else if (matchedParcel.status === 'Not delivered') {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel is not delivered yet!',
-      });
-    } else if (matchedParcel.status === 'Delivered') {
-      parcels = _.without(parcels, matchedParcel);
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel deleted',
-      });
-    }
   }
 
   // GET /users/:id/parcels/deliver
   static getSumParcelDelivered(req, res) {
     const userId = parseInt(req.params.id, 10);
-    const matchedParcels = _.where(parcels, {
-      user: userId,
-      status: 'Delivered',
+    const userParcels = parcels.filter(orders => orders.user === userId);
+    const matchedParcels = [];
+
+    userParcels.forEach((parcel) => {
+      if (parcel.status === 'Delivered') {
+        matchedParcels.push(parcel);
+      }
     });
 
-    if (matchedParcels) {
+    if (userParcels.length === 0) {
+      res.status(404).send({
+        status: 'Failure',
+        message: 'User not found',
+      });
+    } else if (userParcels) {
       res.status(200).send({
         status: 'Success',
-        message: `You have ${matchedParcels.length} parcels`,
+        message: 'Total parcel retrieved',
+        data: matchedParcels.length,
       });
-    } else {
-      res.status(404).send();
     }
   }
 
   // PUT /parcels/:id/cancel
   static cancelParcel(req, res) {
     const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = _.findWhere(parcels, {
-      id: parcelId,
+    let matchedParcel;
+
+    parcels.forEach((parcel) => {
+      if (parcel.id === parcelId) {
+        matchedParcel = parcel;
+      }
     });
 
     if (!matchedParcel) {
@@ -135,11 +106,16 @@ class ParcelController {
         status: 'Success',
         message: 'Parcel has been delivered',
       });
+    } else if (matchedParcel.status === 'Cancelled') {
+      res.status(200).send({
+        status: 'Success',
+        message: 'Parcel has been cancelled',
+      });
     } else {
       matchedParcel.status = 'Cancelled';
       res.status(200).send({
         status: 'Success',
-        message: 'Parcel cancelled',
+        message: 'Parcel is cancelled',
         data: matchedParcel,
       });
     }
@@ -148,28 +124,34 @@ class ParcelController {
   // PUT /parcels/:id/destination
   static changeDestination(req, res) {
     const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = _.findWhere(parcels, {
-      id: parcelId,
+    let matchedParcel;
+    const body = { destination: req.body.destination };
+    const { destination } = body;
+
+    parcels.forEach((parcel) => {
+      if (parcel.id === parcelId) {
+        matchedParcel = parcel;
+      }
     });
 
     if (!matchedParcel) {
       return res.status(404).send({
-        status: 'failure',
+        status: 'Failure',
         message: 'No parcel found',
       });
     }
 
-    if (req.body.destination && matchedParcel.status === 'Delivered') {
-      return res.status(400).send({
-        status: 'falure',
+    if (destination && matchedParcel.status === 'Delivered') {
+      return res.status(200).send({
+        status: 'Success',
         message: 'Parcel has been delivered',
       });
     }
 
-    if (req.body.destination && _.isString(req.body.destination)
-    && req.body.destination.trim().length > 0
+    if (destination && typeof (destination) === 'string'
+    && destination.trim().length > 0
     && matchedParcel.status === 'Not delivered') {
-      matchedParcel.destination = req.body.destination.trim();
+      matchedParcel.destination = destination.trim();
       return res.status(200).send({
         status: 'Success',
         message: 'Destination has been changed',

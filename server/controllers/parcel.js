@@ -39,42 +39,7 @@ class ParcelController {
 
   // POST /parcels
   static createParcel(req, res) {
-    // Pick only these specified inputs from user
-    const parcel = {
-      sender: req.body.sender,
-      receiver: req.body.receiver,
-      pickupLocation: req.body.pickupLocation,
-      destination: req.body.destination,
-      item: req.body.item,
-      user: req.body.user,
-    };
-    const {
-      sender, receiver, pickupLocation, destination, item, user,
-    } = parcel;
-
-    // Validate user inputs
-    if (!isNaN(sender) || !isNaN(receiver)
-    || !isNaN(pickupLocation) || !isNaN(destination)
-    || !isNaN(item) || sender.trim().length === 0
-    || receiver.trim().length === 0
-    || pickupLocation.trim().length === 0
-    || destination.trim().length === 0 || item.trim().length === 0
-    || typeof (user) !== 'number') {
-      return res.status(400).send({
-        status: 'Failure',
-        message: 'Invalid input',
-      });
-    }
-
-    // Remove spaces around user inputs
-    parcel.sender = sender.trim();
-    parcel.receiver = receiver.trim();
-    parcel.pickupLocation = pickupLocation.trim();
-    parcel.destination = destination.trim();
-    parcel.item = item.trim();
-
-    // Add location field
-    parcel.location = pickupLocation.trim();
+    const parcel = req.body;
 
     // Add status field to the object
     parcel.status = 'Not delivered';

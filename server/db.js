@@ -40,6 +40,24 @@ const users = [{
   password: 'cfbdsbks',
   role: 'Admin',
   id: 1,
+},
+{
+  firstName: 'Leonard',
+  lastName: 'Smith',
+  phoneNumber: '+09056374893',
+  email: 'leonardsmith@gmail.com',
+  password: 'cfbdsbks',
+  role: 'Admin',
+  id: 2,
+},
+{
+  firstName: 'Henry',
+  lastName: 'Dock',
+  phoneNumber: '+09056374893',
+  email: 'henrydock@gmail.com',
+  password: 'cfbdsbks',
+  role: 'Admin',
+  id: 3,
 }];
 
 export { parcels, users };

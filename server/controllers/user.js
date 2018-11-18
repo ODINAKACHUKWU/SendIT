@@ -120,7 +120,8 @@ class UserController {
   static changeLocation(req, res) {
     const parcelId = parseInt(req.params.id, 10);
     const matchedParcel = parcels.find(parcel => parcel.id === parcelId);
-    const location = req.body;
+    const body = { location: req.body.location };
+    const { location } = body;
 
     if (!matchedParcel) {
       return res.status(404).send({
@@ -130,12 +131,14 @@ class UserController {
     }
 
     if (location && matchedParcel.status === 'Delivered') {
-      res.status(200).send({
+      return res.status(200).send({
         status: 'Success',
         message: 'Parcel has been delivered',
       });
-    } else if (location && matchedParcel.status === 'Cancelled') {
-      res.status(200).send({
+    }
+
+    if (location && matchedParcel.status === 'Cancelled') {
+      return res.status(200).send({
         status: 'Success',
         message: 'Parcel has been cancelled',
       });

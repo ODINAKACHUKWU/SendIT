@@ -43,13 +43,13 @@ body {
   margin-right: 100px;
 }
 
+#back {
+  border-radius: 50px;
+}
+
 #logout:hover,
 #back:hover {
   opacity: 0.8;
-}
-
-#back {
-  border-radius: 50px;
 }
 
 .dash-section {
@@ -550,6 +550,7 @@ fieldset {
     display: -webkit-flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 100%;
     padding: 20px 0px;
     background-color: #1b1464;
   }
@@ -582,6 +583,7 @@ fieldset {
   .left {
     padding-top: 50px;
   }
+
 } 
 
 /* Portrait view */
@@ -591,6 +593,7 @@ fieldset {
     display: -webkit-flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 100%;
     background-color: #1b1464;
     padding: 20px;
   }
@@ -677,9 +680,9 @@ fieldset {
     font-size: 12px;
   }
 
- 
   .menu {
     display: none;
+    width: 0px;
   }
 
   #logout {
@@ -688,8 +691,9 @@ fieldset {
   }
 
   .orders-tab {
+    max-width: 100%;
     font-size: 12px;
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 
 }

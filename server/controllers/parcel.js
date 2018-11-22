@@ -1,163 +1,218 @@
-import { parcels } from '../db';
-
-let lastCreatedParcelId = parcels.length;
+import pool from '../db';
 
 class ParcelController {
-  // GET /parcels
   static getAllParcels(req, res) {
-    res.status(200).send({
-      status: 'Success',
-      message: 'Parcels retrieved',
-      data: parcels,
+    pool.query('SELECT * FROM parcels ORDER BY id ASC', (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      const parcels = results.rows;
+
+      if (parcels.length === 0) {
+        return res.status(200).send({
+          status: 'Success',
+          message: 'There is no parcel',
+          data: parcels,
+        });
+      }
+      return res.status(200).send({
+        status: 'Success',
+        message: 'Parcels retrieved',
+        data: parcels,
+      });
     });
   }
 
-  // GET /parcels/:id
-  static getSpecificParcel(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    let matchedParcel;
+  static getParcelById(req, res) {
+    const id = parseInt(req.params.id, 10);
 
-    parcels.forEach((parcel) => {
-      if (parcel.id === parcelId) {
-        matchedParcel = parcel;
+    pool.query('SELECT * FROM parcels WHERE id = $1', [id], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
       }
-    });
 
-    if (matchedParcel) {
-      res.status(200).send({
+      const parcel = results.rows[0];
+
+      if (!parcel) {
+        return res.status(404).send({
+          status: 'Failure',
+          message: 'Parcel not found',
+        });
+      }
+      return res.status(200).send({
         status: 'Success',
         message: 'Parcel retrieved',
-        data: matchedParcel,
+        data: parcel,
       });
-    } else {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'Parcel not found',
-      });
-    }
+    });
   }
 
-  // POST /parcels
   static createParcel(req, res) {
-    const parcel = req.body;
+    const {
+      sender,
+      reciever,
+      item,
+      pickupLocation,
+      destination,
+      schedule,
+      presentLocation,
+      price,
+      status,
+      decoded,
+    } = req.body;
 
-    // Add status field to the object
-    parcel.status = 'Not delivered';
-
-    // Add id field to the object
-    parcel.id = lastCreatedParcelId + 1;
-    lastCreatedParcelId += 1;
-
-    // Push body into array
-    parcels.push(parcel);
-
-    // Send user info back to user
-    res.status(201).send({
-      status: 'Success',
-      message: 'Parcel Created',
-      data: parcel,
-    });
+    pool.query('INSERT INTO parcels (userid, sender, reciever, item, pickup_location, destination, schedule, present_location, price, order_status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+      [decoded.userId, sender, reciever, item,
+        pickupLocation, destination, schedule, presentLocation, price,
+        status], (error, results) => {
+        if (error) {
+          return res.status(500).send({
+            status: 'Failure',
+            message: error.message,
+          });
+        }
+        return res.status(201).send({
+          status: 'Success',
+          message: 'Parcel created',
+        });
+      });
   }
 
-  // GET /users/:id/parcels/deliver
-  static getSumParcelDelivered(req, res) {
-    const userId = parseInt(req.params.id, 10);
-    const userParcels = parcels.filter(orders => orders.user === userId);
-    const matchedParcels = [];
-
-    userParcels.forEach((parcel) => {
-      if (parcel.status === 'Delivered') {
-        matchedParcels.push(parcel);
-      }
-    });
-
-    if (userParcels.length === 0) {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'User not found',
-      });
-    } else if (userParcels) {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Total parcel retrieved',
-        data: matchedParcels.length,
-      });
-    }
-  }
-
-  // PUT /parcels/:id/cancel
-  static cancelParcel(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    let matchedParcel;
-
-    parcels.forEach((parcel) => {
-      if (parcel.id === parcelId) {
-        matchedParcel = parcel;
-      }
-    });
-
-    if (!matchedParcel) {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'Parcel not found',
-      });
-    } else if (matchedParcel.status === 'Delivered') {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been delivered',
-      });
-    } else if (matchedParcel.status === 'Cancelled') {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been cancelled',
-      });
-    } else {
-      matchedParcel.status = 'Cancelled';
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel is cancelled',
-        data: matchedParcel,
-      });
-    }
-  }
-
-  // PUT /parcels/:id/destination
+  // only user who created the parcel can change the destination
   static changeDestination(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    let matchedParcel;
-    const body = { destination: req.body.destination };
-    const { destination } = body;
+    const id = parseInt(req.params.id, 10);
+    const { destination } = req.body;
 
-    parcels.forEach((parcel) => {
-      if (parcel.id === parcelId) {
-        matchedParcel = parcel;
-      }
-    });
+    pool.query(
+      'UPDATE parcels SET destination = $1 WHERE id = $2',
+      [destination, id],
+      (error, results) => {
+        if (error) {
+          return res.status(500).send({
+            status: 'Failure',
+            message: error.message,
+          });
+        }
 
-    if (!matchedParcel) {
-      return res.status(404).send({
+        const parcel = results.rows[0];
+
+        if (!parcel) {
+          return res.status(404).send({
+            status: 'Failure',
+            message: 'Parcel not found',
+          });
+        }
+
+        return res.status(200).send({
+          status: 'Success',
+          message: 'Destination has been changed',
+          data: parcel,
+        });
+      },
+    );
+  }
+
+  /**
+   * only admin can change the status to either delivered or cancelled
+   *  */
+  static changeStatus(req, res) {
+    const id = parseInt(req.params.id, 10);
+    const { status, decoded } = req.body;
+
+    if (decoded.category !== 'Admin') {
+      return res.status(401).send({
         status: 'Failure',
-        message: 'No parcel found',
+        message: 'You are not an admin',
       });
     }
 
-    if (destination && matchedParcel.status === 'Delivered') {
-      return res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been delivered',
-      });
-    }
+    pool.query('SELECT * FROM parcels WHERE id = $1', [id], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
 
-    if (destination && typeof (destination) === 'string'
-    && destination.trim().length > 0
-    && matchedParcel.status === 'Not delivered') {
-      matchedParcel.destination = destination.trim();
-      return res.status(200).send({
-        status: 'Success',
-        message: 'Destination has been changed',
-        data: matchedParcel,
-      });
-    }
+      const parcel = results.rows[0];
+
+      if (!parcel) {
+        return res.status(404).send({
+          status: 'Failure',
+          message: 'Parcel not found',
+        });
+      }
+      console.log(parcel);
+
+      pool.query(
+        'UPDATE parcels SET order_status = $1 WHERE id = $2',
+        [status, decoded, id],
+        (error, results) => {
+          if (error) {
+            return res.status(500).send({
+              status: 'Failure',
+              message: error.message,
+            });
+          }
+
+          // const parcel = results.rows[0];
+
+          // if (!parcel) {
+          //   return res.status(404).send({
+          //     status: 'Failure',
+          //     message: 'Parcel not found',
+          //   });
+          // }
+
+          return res.status(200).send({
+            status: 'Success',
+            message: 'Status has been changed',
+            data: parcel,
+          });
+        },
+      );
+    });
+  }
+
+  // only admin can change the location
+  static changeLocation(req, res) {
+    const id = parseInt(req.params.id, 10);
+    const { location } = req.body;
+
+    pool.query(
+      'UPDATE parcels SET present_location = $1 WHERE id = $2',
+      [location, id],
+      (error, results) => {
+        if (error) {
+          return res.status(500).send({
+            status: 'Failure',
+            message: error.message,
+          });
+        }
+
+        const parcel = results.rows[0];
+
+        if (!parcel) {
+          return res.status(404).send({
+            status: 'Failure',
+            message: 'Parcel not found',
+          });
+        }
+
+        return res.status(200).send({
+          status: 'Success',
+          message: 'Location has been changed',
+          data: parcel,
+        });
+      },
+    );
   }
 }
 

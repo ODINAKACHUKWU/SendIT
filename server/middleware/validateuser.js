@@ -1,41 +1,83 @@
-const validUser = (req, res, next) => {
-  const user = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    password: req.body.password,
-    role: req.body.role,
-  };
-  const {
-    firstName, lastName, phoneNumber, email, password, role,
-  } = user;
 
-  if (!firstName || typeof firstName !== 'string'
-  || firstName.trim().length === 0
-    || !lastName || typeof lastName !== 'string'
-    || lastName.trim().length === 0
-    || !phoneNumber || typeof phoneNumber !== 'string'
-    || phoneNumber.trim().length === 0
-    || !email || typeof email !== 'string' || email.trim().length === 0
-    || !password || typeof password !== 'string'
-    || password.trim().length === 0
-    || !role || typeof role !== 'string'
-    || role.trim().length === 0) {
+const validSignup = (req, res, next) => {
+  const {
+    firstName, lastName, phoneNumber, email, password, category,
+  } = req.body;
+
+  if (!firstName || firstName.trim().length === 0) {
     return res.status(400).send({
       status: 'Failure',
-      message: 'Invalid input',
+      message: 'Please enter first name',
     });
   }
+  req.body.firstName = firstName.trim();
 
-  user.firstName = firstName.trim();
-  user.lastName = lastName.trim();
-  user.email = email.trim();
-  user.password = password.trim();
-  user.role = role.trim();
-  user.phoneNumber = phoneNumber.trim();
-  req.body = user;
+
+  if (!lastName || lastName.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter last name',
+    });
+  }
+  req.body.lastName = lastName.trim();
+
+  if (!phoneNumber || phoneNumber.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a phone number',
+    });
+  }
+  req.body.phoneNumber = phoneNumber.trim();
+
+  if (!email || email.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter an email address',
+    });
+  }
+  req.body.email = email.trim();
+
+  if (!password || password.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a password',
+    });
+  }
+  req.body.password = password.trim();
+
+  if (!category || category.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a category',
+    });
+  }
+  req.body.category = category.trim();
+
   next();
 };
 
-export default validUser;
+const validLogin = (req, res, next) => {
+  const {
+    email, password,
+  } = req.body;
+
+  if (!email || email.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter an email address',
+    });
+  }
+  req.body.email = email.trim();
+
+  if (!password || password.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a password',
+    });
+  }
+  req.body.password = password.trim();
+
+  next();
+};
+
+export { validSignup, validLogin };

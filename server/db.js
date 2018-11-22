@@ -1,63 +1,16 @@
-const parcels = [{
-  sender: 'John',
-  receiver: 'Francis',
-  pickupLocation: '12 Lagoon Street',
-  destination: '4 Agip Street',
-  item: 'book',
-  user: 3,
-  location: '12 Lagoon Street',
-  status: 'Not delivered',
-  id: 1,
-},
-{
-  sender: 'John',
-  receiver: 'Francis',
-  pickupLocation: '12 Lagoon Street',
-  destination: '5 Ben str.',
-  item: 'book',
-  user: 3,
-  location: '12 Lagoon Street',
-  status: 'Delivered',
-  id: 2,
-},
-{
-  sender: 'Richard',
-  receiver: 'Ben',
-  pickupLocation: '13 Lagoon str.',
-  destination: '3 Bright way',
-  item: 'Blue bag',
-  user: 5,
-  location: '12 Lagoon Street',
-  status: 'Cancelled',
-  id: 3,
-}];
+import { Pool } from 'pg';
+import config from './config';
 
-const users = [{
-  firstName: 'Bright',
-  lastName: 'Young',
-  phoneNumber: '+09056374893',
-  email: 'brightyoung@gmail.com',
-  password: 'cfbdsbks',
-  role: 'Admin',
-  id: 1,
-},
-{
-  firstName: 'Leonard',
-  lastName: 'Smith',
-  phoneNumber: '+09056374893',
-  email: 'leonardsmith@gmail.com',
-  password: 'cfbdsbks',
-  role: 'Admin',
-  id: 2,
-},
-{
-  firstName: 'Henry',
-  lastName: 'Dock',
-  phoneNumber: '+09056374893',
-  email: 'henrydock@gmail.com',
-  password: 'cfbdsbks',
-  role: 'Admin',
-  id: 3,
-}];
+let option;
 
-export { parcels, users };
+if (process.env.NODE_ENV === 'test') {
+  option = config.test;
+} else if (process.env.NODE_ENV === 'development') {
+  option = config.dev;
+} else if (process.env.NODE_ENV === 'production') {
+  option = config.production.database_url;
+}
+
+const pool = new Pool(option);
+
+export default pool;

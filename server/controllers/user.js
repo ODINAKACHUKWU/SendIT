@@ -1,159 +1,137 @@
-import { users, parcels } from '../db';
-
-let lastCreatedUserId = users.length;
+import jwt from 'jsonwebtoken';
+import pool from '../db';
 
 class UserController {
-  // GET /users
   static getAllUsers(req, res) {
-    res.status(200).send({
-      status: 'Success',
-      message: 'Users retrieved',
-      data: users,
+    pool.query('SELECT UserID, first_name, last_name, phone_number, email, category FROM users ORDER BY userId ASC', (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      const users = results.rows;
+
+      if (users.length === 0) {
+        return res.status(200).send({
+          status: 'Success',
+          message: 'There is no user',
+          data: users,
+        });
+      }
+      return res.status(200).send({
+        status: 'Success',
+        message: 'Users retrieved',
+        data: users,
+      });
     });
   }
 
-  // GET /users/:id
-  static getSpecificUser(req, res) {
-    const userId = parseInt(req.params.id, 10);
-    let matchedUser;
+  static getUserById(req, res) {
+    const id = parseInt(req.params.id, 10);
 
-    users.forEach((user) => {
-      if (user.id === userId) {
-        matchedUser = user;
+    pool.query('SELECT UserID, first_name, last_name, phone_number, email, category FROM users WHERE userId = $1', [id], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
       }
-    });
 
-    if (matchedUser) {
-      res.status(200).send({
+      const user = results.rows[0];
+
+      if (!user) {
+        return res.status(404).send({
+          status: 'Failure',
+          message: 'User not found',
+        });
+      }
+      return res.status(200).send({
         status: 'Success',
         message: 'User retrieved',
-        data: matchedUser,
+        data: user,
       });
-    } else {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'User not found',
-      });
-    }
+    });
   }
 
-  // GET /users/:id/parcels
-  static getUserParcels(req, res) {
-    const userId = parseInt(req.params.id, 10);
-    const matchedParcels = [];
+  static registerUser(req, res) {
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      password,
+      category,
+    } = req.body;
 
-    parcels.forEach((parcel) => {
-      if (parcel.user === userId) {
-        matchedParcels.push(parcel);
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      const user = results.rows[0];
+
+      if (user) {
+        return res.status(400).send({
+          status: 'Failure',
+          message: `Account with the email address: ${email} already exist`,
+        });
+      }
+
+      pool.query('INSERT INTO users (first_name, last_name, phone_number, email, pass_word, category) VALUES ($1, $2, $3, $4, $5, $6)',
+        [firstName, lastName, phoneNumber, email, password,
+          category], () => res.status(201).send({
+          status: 'Success',
+          message: 'Account created',
+        }));
+    });
+  }
+
+  static loginUser(req, res) {
+    const { email, password } = req.body;
+
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      const user = results.rows[0];
+
+      if (!user) {
+        return res.status(400).send({
+          status: 'Failure',
+          message: 'User not found',
+        });
+      }
+
+      if (user && user.pass_word !== password) {
+        return res.status(400).send({
+          status: 'Failure',
+          message: 'Wrong password',
+        });
+      }
+
+      if (user && user.pass_word === password) {
+        const token = jwt.sign({
+          userId: user.userid,
+          category: user.category,
+        },
+        process.env.SECRET, { expiresIn: '3d' });
+
+        return res.status(200).send({
+          status: 'Success',
+          message: `${user.first_name} ${user.last_name} is Logged in`,
+          data: token,
+        });
       }
     });
-
-    if (matchedParcels.length > 0) {
-      res.status(200).send({
-        status: 'Success',
-        message: "User's parcels retrieved",
-        data: matchedParcels,
-      });
-    } else {
-      res.status(200).send({
-        status: 'Success',
-        message: 'User has no parcels',
-      });
-    }
-  }
-
-  // POST /users
-  static addUserAccount(req, res) {
-    const user = req.body;
-    // Add id field to the object
-    user.id = lastCreatedUserId + 1;
-    lastCreatedUserId += 1;
-
-    // Push body into array
-    users.push(user);
-
-    // Send user info back to user
-    res.status(201).send({
-      status: 'Success',
-      message: 'Account Created',
-      data: user,
-    });
-  }
-
-  // PUT /parcels/:id/deliver
-  static changeStatus(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    let matchedParcel;
-
-    parcels.forEach((parcel) => {
-      if (parcel.id === parcelId) {
-        matchedParcel = parcel;
-      }
-    });
-
-    if (!matchedParcel) {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'Parcel not found',
-      });
-    } else if (matchedParcel.status === 'Delivered') {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been delivered',
-      });
-    } else if (matchedParcel.status === 'Cancelled') {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been cancelled',
-      });
-    } else if (matchedParcel.status === 'Not delivered') {
-      matchedParcel.status = 'Delivered';
-      res.status(200).send({
-        status: 'Success',
-        message: 'Status changed',
-        data: matchedParcel,
-      });
-    }
-  }
-
-  // PUT /parcels/:id/location
-  static changeLocation(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = parcels.find(parcel => parcel.id === parcelId);
-    const body = { location: req.body.location };
-    const { location } = body;
-
-    if (!matchedParcel) {
-      return res.status(404).send({
-        status: 'Failure',
-        message: 'No parcel found',
-      });
-    }
-
-    if (location && matchedParcel.status === 'Delivered') {
-      return res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been delivered',
-      });
-    }
-
-    if (location && matchedParcel.status === 'Cancelled') {
-      return res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been cancelled',
-      });
-    }
-
-    if (location && typeof (location) === 'string'
-    && location.trim().length > 0
-    && matchedParcel.status === 'Not delivered') {
-      matchedParcel.location = location.trim();
-      res.status(200).send({
-        status: 'Success',
-        message: 'Location has been changed',
-        data: matchedParcel,
-      });
-    }
   }
 }
 

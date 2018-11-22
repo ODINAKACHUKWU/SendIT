@@ -2,35 +2,32 @@ import express from 'express';
 
 import ParcelController from '../controllers/parcel';
 import UserController from '../controllers/user';
-import validUser from '../middleware/validateuser';
-import validParcel from '../middleware/validateparcel';
+import { validSignup, validLogin } from '../middleware/validateuser';
+// import validParcel from '../middleware/validateparcel';
+import AuthenticateUser from '../middleware/auth';
 
 const router = express.Router();
 
 // Parcel routes
-router.get('/parcels', ParcelController.getAllParcels);
+router.get('/parcels', AuthenticateUser.verifyToken, ParcelController.getAllParcels);
 
-router.get('/parcels/:id', ParcelController.getSpecificParcel);
+router.get('/parcels/:id', AuthenticateUser.verifyToken, ParcelController.getParcelById);
 
-router.post('/parcels', validParcel, ParcelController.createParcel);
+router.post('/parcels', AuthenticateUser.verifyToken, ParcelController.createParcel);
 
-router.put('/parcels/:id/cancel', ParcelController.cancelParcel);
+router.put('/parcels/:id/destination', AuthenticateUser.verifyToken, ParcelController.changeDestination);
 
-router.put('/parcels/:id/destination', ParcelController.changeDestination);
+router.put('/parcels/:id/status', AuthenticateUser.verifyToken, ParcelController.changeStatus);
 
-router.get('/users/:id/parcels/deliver', ParcelController.getSumParcelDelivered);
+router.put('/parcels/:id/presentLocation', AuthenticateUser.verifyToken, ParcelController.changeLocation);
 
 // User routes
 router.get('/users', UserController.getAllUsers);
 
-router.get('/users/:id', UserController.getSpecificUser);
+router.get('/users/:id', UserController.getUserById);
 
-router.get('/users/:id/parcels', UserController.getUserParcels);
+router.post('/auth/signup', validSignup, UserController.registerUser);
 
-router.post('/users', validUser, UserController.addUserAccount);
-
-router.put('/parcels/:id/deliver', UserController.changeStatus);
-
-router.put('/parcels/:id/location', UserController.changeLocation);
+router.post('/auth/login', validLogin, UserController.loginUser);
 
 export default router;

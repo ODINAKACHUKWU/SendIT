@@ -18,7 +18,7 @@ const config = {
     port: process.env.DB_PORT,
   },
   production: {
-    database_url: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
   },
 };
 

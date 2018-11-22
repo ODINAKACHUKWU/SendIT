@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'test') {
 } else if (process.env.NODE_ENV === 'development') {
   option = config.dev;
 } else if (process.env.NODE_ENV === 'production') {
-  option = config.production.database_url;
+  option = config.production;
 }
 
 const pool = new Pool(option);

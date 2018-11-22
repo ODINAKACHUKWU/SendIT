@@ -68,7 +68,7 @@ class ParcelController {
       decoded,
     } = req.body;
 
-    pool.query('INSERT INTO parcels (userid, sender, reciever, item, pickup_location, destination, schedule, present_location, price, order_status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+    pool.query('INSERT INTO parcels (userid, sender, reciever, item, pickup_location, destination, schedule, present_location, price, order_status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
       [decoded.userId, sender, reciever, item,
         pickupLocation, destination, schedule, presentLocation, price,
         status], (error, results) => {
@@ -81,6 +81,7 @@ class ParcelController {
         return res.status(201).send({
           status: 'Success',
           message: 'Parcel created',
+          data: results.rows[0],
         });
       });
   }

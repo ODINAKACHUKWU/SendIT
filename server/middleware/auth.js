@@ -6,33 +6,41 @@ const AuthenticateUser = {
   verifyToken(req, res, next) {
     const token = req.headers['x-access-token'];
     if (!token) {
-      return res.status(400).send({
+      return res.status(401).send({
         status: 'Failure',
         message: 'Token is not provided',
       });
     }
 
-    const decoded = jwt.verify(token, process.env.SECRET);
-
-    pool.query('SELECT * FROM users WHERE userid = $1', [decoded.userId], (error, results) => {
+    jwt.verify(token, process.env.SECRET, (error, decoded) => {
       if (error) {
-        return res.status(500).send({
+        return res.status(401).send({
           status: 'Failure',
-          message: error.message,
+          message: 'Invalid token provided',
         });
       }
 
-      const user = results.rows[0];
+      pool.query('SELECT * FROM users WHERE userid = $1', [decoded.userId],
+        (err, results) => {
+          if (err) {
+            return res.status(500).send({
+              status: 'Failure',
+              message: err.message,
+            });
+          }
 
-      if (!user) {
-        return res.status(400).send({
-          status: 'Failure',
-          message: 'The token you provided is invalid',
+          const user = results.rows[0];
+
+          if (!user) {
+            return res.status(400).send({
+              status: 'Failure',
+              message: 'The token you provided is invalid',
+            });
+          }
+
+          req.body.decoded = decoded;
+          next();
         });
-      }
-
-      req.body.decoded = decoded;
-      next();
     });
   },
 };

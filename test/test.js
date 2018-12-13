@@ -1,7 +1,8 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
 import myApp from '../server/index';
-import { parcels, users } from '../server/db';
+import pool from '../server/db';
+
 
 chai.should();
 

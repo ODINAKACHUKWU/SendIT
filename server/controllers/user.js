@@ -1,159 +1,267 @@
-import { users, parcels } from '../db';
-
-let lastCreatedUserId = users.length;
+import jwt from 'jsonwebtoken';
+import pool from '../db';
 
 class UserController {
-  // GET /users
+  /**
+   * Get all users
+   * @param {object} req
+   * @param {object} res
+   * @returns {array} return status code 200
+   */
   static getAllUsers(req, res) {
-    res.status(200).send({
-      status: 'Success',
-      message: 'Users retrieved',
-      data: users,
+    const { decoded } = req.body;
+
+    if (decoded.category !== 'Admin') {
+      return res.status(403).send({
+        status: 'Failure',
+        message: 'You are not an admin',
+      });
+    }
+
+    pool.query('SELECT UserID, first_name, last_name, phone_number, email, category FROM users ORDER BY userId ASC', (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      const users = results.rows;
+
+      if (users.length === 0) {
+        return res.status(200).send({
+          status: 'Success',
+          message: 'There is no user',
+          data: users,
+        });
+      }
+      return res.status(200).send({
+        status: 'Success',
+        message: 'Users retrieved',
+        data: users,
+      });
     });
   }
 
-  // GET /users/:id
-  static getSpecificUser(req, res) {
-    const userId = parseInt(req.params.id, 10);
-    let matchedUser;
+  /**
+   * Get a user
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} return status code 200
+   */
+  static getUserById(req, res) {
+    const { decoded } = req.body;
 
-    users.forEach((user) => {
-      if (user.id === userId) {
-        matchedUser = user;
+    if (decoded.category !== 'Admin') {
+      return res.status(403).send({
+        status: 'Failure',
+        message: 'You are not an admin',
+      });
+    }
+
+    const id = parseInt(req.params.id, 10);
+
+    pool.query('SELECT UserID, first_name, last_name, phone_number, email, category FROM users WHERE userId = $1', [id], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
       }
-    });
 
-    if (matchedUser) {
-      res.status(200).send({
+      const user = results.rows[0];
+
+      if (!user) {
+        return res.status(404).send({
+          status: 'Failure',
+          message: 'User not found',
+        });
+      }
+      return res.status(200).send({
         status: 'Success',
         message: 'User retrieved',
-        data: matchedUser,
+        data: user,
       });
-    } else {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'User not found',
-      });
-    }
+    });
   }
 
-  // GET /users/:id/parcels
-  static getUserParcels(req, res) {
-    const userId = parseInt(req.params.id, 10);
-    const matchedParcels = [];
+  /**
+   * Create a user account
+   * @param {object} req
+   * @param {object} res
+   * @returns {string} return status code 201
+   */
+  static registerUser(req, res) {
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      password,
+      category,
+    } = req.body;
 
-    parcels.forEach((parcel) => {
-      if (parcel.user === userId) {
-        matchedParcels.push(parcel);
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      const account = results.rows[0];
+
+      if (account) {
+        return res.status(400).send({
+          status: 'Failure',
+          message: `Account with the email address: ${email} already exist`,
+        });
+      }
+
+      pool.query('INSERT INTO users (first_name, last_name, phone_number, email, pass_word, category) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        [firstName, lastName, phoneNumber, email, password,
+          category], (err, result) => {
+          if (err) {
+            return res.status(500).send({
+              status: 'Failure',
+              message: err.message,
+            });
+          }
+
+          const user = result.rows[0];
+          const token = jwt.sign({
+            userId: user.userid,
+            category: user.category,
+          },
+          process.env.SECRET, { expiresIn: '3d' });
+
+          res.status(201).send({
+            status: 'Success',
+            message: `Account created for ${firstName} ${lastName}`,
+            data: token,
+          });
+        });
+    });
+  }
+
+  /**
+   * Log in a user
+   * @param {object} req
+   * @param {object} res
+   * @returns {string} return status code 200
+   */
+  static loginUser(req, res) {
+    const { email, password } = req.body;
+
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      const user = results.rows[0];
+
+      if (!user) {
+        return res.status(400).send({
+          status: 'Failure',
+          message: 'Invalid credentials',
+        });
+      }
+
+      if (user && user.pass_word !== password) {
+        return res.status(400).send({
+          status: 'Failure',
+          message: 'Invalid credentials',
+        });
+      }
+
+      if (user && user.pass_word === password) {
+        const token = jwt.sign({
+          userId: user.userid,
+          category: user.category,
+        },
+        process.env.SECRET, { expiresIn: '3d' });
+
+        return res.status(200).send({
+          status: 'Success',
+          message: `${user.first_name} ${user.last_name} is Logged in`,
+          data: token,
+        });
       }
     });
-
-    if (matchedParcels.length > 0) {
-      res.status(200).send({
-        status: 'Success',
-        message: "User's parcels retrieved",
-        data: matchedParcels,
-      });
-    } else {
-      res.status(200).send({
-        status: 'Success',
-        message: 'User has no parcels',
-      });
-    }
   }
 
-  // POST /users
-  static addUserAccount(req, res) {
-    const user = req.body;
-    // Add id field to the object
-    user.id = lastCreatedUserId + 1;
-    lastCreatedUserId += 1;
+  /**
+   * Update user role
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} return status code 200
+   */
+  static assignAdmin(req, res) {
+    const id = parseInt(req.params.id, 10);
+    const { category, decoded } = req.body;
 
-    // Push body into array
-    users.push(user);
+    pool.query('SELECT * FROM users WHERE userid = $1', [id], (error, results) => {
+      if (error) {
+        return res.status(500).send({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
 
-    // Send user info back to user
-    res.status(201).send({
-      status: 'Success',
-      message: 'Account Created',
-      data: user,
-    });
-  }
+      const user = results.rows[0];
 
-  // PUT /parcels/:id/deliver
-  static changeStatus(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    let matchedParcel;
+      if (!user) {
+        return res.status(404).send({
+          status: 'Failure',
+          message: 'User not found',
+        });
+      }
 
-    parcels.forEach((parcel) => {
-      if (parcel.id === parcelId) {
-        matchedParcel = parcel;
+      if (user) {
+        if (decoded.category !== 'Admin') {
+          return res.status(403).send({
+            status: 'Failure',
+            message: 'You are not an admin',
+          });
+        }
+
+        if (decoded.userId === user.userid) {
+          return res.status(403).send({
+            status: 'Failure',
+            message: 'You are an Admin',
+          });
+        }
+
+        if (user.category === 'Admin') {
+          return res.status(403).send({
+            status: 'Failure',
+            message: 'User is an Admin',
+          });
+        }
+
+        pool.query(
+          'UPDATE users SET category = $1 WHERE userid = $2 RETURNING UserID, first_name, last_name, phone_number, email, category',
+          [category, id],
+          (err, result) => {
+            if (err) {
+              return res.status(500).send({
+                status: 'Failure',
+                message: err.message,
+              });
+            }
+
+            return res.status(200).send({
+              status: 'Success',
+              message: 'User\'s category has been changed to Admin',
+              data: result.rows[0],
+            });
+          },
+        );
       }
     });
-
-    if (!matchedParcel) {
-      res.status(404).send({
-        status: 'Failure',
-        message: 'Parcel not found',
-      });
-    } else if (matchedParcel.status === 'Delivered') {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been delivered',
-      });
-    } else if (matchedParcel.status === 'Cancelled') {
-      res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been cancelled',
-      });
-    } else if (matchedParcel.status === 'Not delivered') {
-      matchedParcel.status = 'Delivered';
-      res.status(200).send({
-        status: 'Success',
-        message: 'Status changed',
-        data: matchedParcel,
-      });
-    }
-  }
-
-  // PUT /parcels/:id/location
-  static changeLocation(req, res) {
-    const parcelId = parseInt(req.params.id, 10);
-    const matchedParcel = parcels.find(parcel => parcel.id === parcelId);
-    const body = { location: req.body.location };
-    const { location } = body;
-
-    if (!matchedParcel) {
-      return res.status(404).send({
-        status: 'Failure',
-        message: 'No parcel found',
-      });
-    }
-
-    if (location && matchedParcel.status === 'Delivered') {
-      return res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been delivered',
-      });
-    }
-
-    if (location && matchedParcel.status === 'Cancelled') {
-      return res.status(200).send({
-        status: 'Success',
-        message: 'Parcel has been cancelled',
-      });
-    }
-
-    if (location && typeof (location) === 'string'
-    && location.trim().length > 0
-    && matchedParcel.status === 'Not delivered') {
-      matchedParcel.location = location.trim();
-      res.status(200).send({
-        status: 'Success',
-        message: 'Location has been changed',
-        data: matchedParcel,
-      });
-    }
   }
 }
 

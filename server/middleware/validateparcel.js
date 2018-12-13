@@ -1,42 +1,80 @@
 const validParcel = (req, res, next) => {
-  const parcel = {
-    sender: req.body.sender,
-    receiver: req.body.receiver,
-    pickupLocation: req.body.pickupLocation,
-    destination: req.body.destination,
-    item: req.body.item,
-    user: req.body.user,
-  };
   const {
-    sender, receiver, pickupLocation, destination, item, user,
-  } = parcel;
+    sender, receiver, item, pickupLocation, destination, schedule, presentLocation, price, status,
+  } = req.body;
 
-  if (!sender || typeof sender !== 'string'
-    || sender.trim().length === 0
-      || !receiver || typeof receiver !== 'string'
-      || receiver.trim().length === 0
-      || !pickupLocation || typeof pickupLocation !== 'string'
-      || pickupLocation.trim().length === 0
-      || !destination || typeof destination !== 'string' || destination.trim().length === 0
-      || !item || typeof item !== 'string'
-      || item.trim().length === 0
-      || !user || typeof user !== 'number'
-      || user.toString().trim() <= 0) {
+  if (!sender || sender.trim().length === 0) {
     return res.status(400).send({
       status: 'Failure',
-      message: 'Invalid input',
+      message: 'Please enter a sender',
+    });
+  }
+  req.body.sender = sender.trim();
+
+
+  if (!receiver || receiver.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a receiver',
+    });
+  }
+  req.body.receiver = receiver.trim();
+
+  if (!item || item.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter an item',
+    });
+  }
+  req.body.item = item.trim();
+
+  if (!pickupLocation || pickupLocation.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a pickup location',
+    });
+  }
+  req.body.pickupLocation = pickupLocation.trim();
+
+  if (!destination || destination.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a destination',
+    });
+  }
+  req.body.destination = destination.trim();
+
+  if (!schedule || schedule.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter schedule',
+    });
+  }
+  req.body.schedule = schedule.trim();
+
+  if (!presentLocation || presentLocation.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter current location',
+    });
+  }
+  req.body.presentLocation = presentLocation.trim();
+
+  if (!price || typeof price !== 'number') {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter a price',
     });
   }
 
-  parcel.sender = sender.trim();
-  parcel.receiver = receiver.trim();
-  parcel.pickupLocation = pickupLocation.trim();
-  parcel.destination = destination.trim();
-  parcel.item = item.trim();
+  if (!status || status.trim().length === 0) {
+    return res.status(400).send({
+      status: 'Failure',
+      message: 'Please enter status',
+    });
+  }
+  req.body.status = status.trim();
 
-  // Add location field
-  parcel.location = pickupLocation.trim();
-  req.body = parcel;
   next();
 };
 

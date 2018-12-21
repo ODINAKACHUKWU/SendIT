@@ -1,4 +1,3 @@
-
 const validSignup = (req, res, next) => {
   const {
     firstName, lastName, phoneNumber, email, password, category,

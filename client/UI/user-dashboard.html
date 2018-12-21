@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SendIT | Dashboard</title>
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 768px)" href="style.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href="style.css" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+    <!-- Page header section -->
+      
+    <header class="main-header">
+            <a href="user-dashboard.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
+            <a href="index.html" id="logout">Log Out <i class="fa fa-sign-out"></i></a>
+    </header>
+
+    <!-- Main content section -->
+
+    <main class="row">
+        <div class="col-100">
+
+            <!-- Left menu section -->
+            <div class="row">
+                <div class="col-25">
+                        <div class="menu">
+                                <a href="user-dashboard.html" class="active">Overview</a>
+                                <a href="orders.html">Orders</a>
+                                <a href="order-page.html">Create Delivery</a>
+                        </div>
+                </div>
+
+                <!-- Overview display section -->
+                
+                <div class="col-75">
+                    <div class="row">
+                        <div class="col-75, dash-head">
+                            Overview
+                        </div>
+                    </div>
+                    <div class="dash-tab">
+                        <div class="col-25">
+                            <table id="details">
+                                <tr>
+                                    <th class="head">Items delivered</th>
+                                </tr>
+                                <tr>
+                                    <td id="delivered"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-25">
+                            <table id="details">
+                                <tr>
+                                    <th class="head">Items in transit</th>
+                                </tr>
+                                <tr>
+                                    <td id="transit"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-25">
+                            <table id="details">
+                                <tr>
+                                    <th class="head">Orders created</th>
+                                </tr>
+                                <tr>
+                                    <td id="orders"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer section -->
+
+    <footer class="dash-footer">
+        <p>&copy; Copyright 2018, SendIT Courier Services. All Rights Reserved.</p>
+    </footer>
+
+    
+    <script src="../js/jwt-decode.js"></script>
+    <script src="../js/dashboard.js"></script>
+
+</body>
+
+</html>

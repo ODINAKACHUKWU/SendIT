@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SendIT | Sign Up</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
+    <!-- Header section -->
+
+    <header class="main-header">
+        <a href="index.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
+        <a href="login.html" id="signup-btn">Sign In <i class="fa fa-sign-in"></i></a>
+    </header>
+
+    <!-- Form section -->
+
+    <div class="main-body">
+        <form id="signup">
+            <div class="container">
+                <div class="title">
+                    <h1>Sign Up</h1>
+                </div>
+                <p>Please fill in this form to create an account.</p>
+                <hr><br>
+
+                <div id="output"></div>
+                <label for="fname"><i class="fa fa-user"></i> <b>First Name:</b>
+                <input type="text" id="firstName" placeholder="Enter First Name" name="fname" required>
+                </label>
+
+                <label for="lname"><i class="fa fa-user"></i> <b>Last Name:</b>
+                <input type="text" id="lastName" placeholder="Enter Last Name" name="lname" required>
+                </label>
+
+                <label for="pnum"><i class="fa fa-phone"></i> <b>Phone Number:</b>
+                <input type="tel" id="phoneNumber" placeholder="Enter Phone Number" name="pnum" required>
+                </label>
+
+                <label for="email"><i class="fa fa-envelope"></i> <b>Email:</b>
+                <input type="email" id="email" placeholder="Enter Email" name="email" required>
+                </label>
+
+                <label for="psw"><i class="fa fa-unlock-alt"></i> <b>Password:</b>
+                <input type="password" id="password" placeholder="Enter Password" name="psw" required>
+                </label>
+
+                <label for="psw-repeat"><i class="fa fa-unlock-alt"></i> <b>Repeat Password:</b>
+                <input type="password" id="passwordRepeat" placeholder="Repeat Password" name="psw-repeat" required>
+                </label>
+
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+                
+                <div class="submit-section">
+                    <p>By creating an account you agree to our<a href="#" id="link">Terms & Privacy</a></p>
+                    <a href="login.html" id="link2">Already have an account?</a>
+                    <button type="submit" class="signupbtn">Sign Up</button>
+                </div>
+    
+            </div>
+        </form>
+
+    </div>
+
+     <!-- Footer section -->
+
+    <footer class="login-footer">
+        <p>&copy; Copyright 2018, SendIT Courier Services. All Rights Reserved.</p>
+    </footer>
+
+    <script src="../js/signup.js"></script>
+
+</body>
+
+</html>

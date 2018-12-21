@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SendIT | Log In</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+
+  <body>
+
+      <!-- Page header section -->
+      
+      <header class="main-header">
+        <a href="index.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
+        <a href="signup.html" id="signup-btn">Sign Up <i class="fa fa-user-plus"></i></a>
+      </header>
+
+      <!-- Main body section -->
+      
+      <div class="main-body">
+        
+        <!-- Page Caption section -->
+        <h1>Sign In</h1>
+
+        <!-- Form section -->
+
+        <form id="loginUser" class="login-form">
+          <div class="imgcontainer">
+            <img src="images/Login-image.png" alt="Avatar" class="avatar">
+          </div>
+
+          <div class="container">
+            <label for="email"><i class="fa fa-envelope"></i> <b>Email:</b>
+            <input type="email" id="userEmail" placeholder="Enter Email" name="email" required>
+            </label>
+
+            <label for="psw"><i class="fa fa-unlock-alt"></i> <b>Password:</b>
+            <input type="password" id="userPassword" placeholder="Enter Password" name="psw" required>
+            </label>
+
+            <div id="output"></div>
+
+            <button type="submit" id="submit"><i class="fa fa-sign-in"></i> <b>Login</b></button>
+              <input type="checkbox" checked="checked" name="remember"> Remember me
+              <a href="#" id="link">Forgot password?</a>
+              <div class="spread">
+                  <a href="signup.html" id="link2">Don't have an account?</a>
+              </div>
+          </div>
+        </form>
+        
+      </div>
+
+      <!-- Footer section -->
+
+      <footer class="login-footer">
+        <p>&copy; Copyright 2018, SendIT Courier Services. All Rights Reserved.</p>
+      </footer>
+
+      <script src="../js/jwt-decode.js"></script>
+      <script src="../js/login.js"></script>
+
+  </body>
+
+  </html>

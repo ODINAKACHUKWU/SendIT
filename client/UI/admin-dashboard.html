@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SendIT | Dashboard</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)" href="style.css" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+    <!-- Page header section -->
+      
+    <header class="main-header">
+            <a href="admin-dashboard.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
+            <a href="index.html" id="logout">Log Out <i class="fa fa-sign-out"></i></a>
+    </header>
+
+    <!-- Main content section -->
+
+    <main class="row">
+        <div class="col-100">
+
+            <!-- Left menu section -->
+
+            <div class="row">
+                <div class="col-25">
+                    <div class="menu">
+                        <a href="admin-dashboard.html" class="active">Customers</a>
+                        <a href="admin-orders.html">Orders</a>
+                    </div>
+                </div>
+
+                <!-- Overview display section -->
+
+                <div class="col-75">
+                    <div class="row">
+                        <div class="col-75, dash-head">Customers</div>
+                    </div>
+                    <table class="orders-tab">
+                            <tr class="orders-header">
+                                <th>Customer ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Total Created</th>
+                                <th>Orders Delivered</th>
+                                <th>Orders Not Delivered</th>
+                            </tr>
+                            <tr class="order-row">
+                                <td>01</td>
+                                <td>John</td>
+                                <td>Smith</td>
+                                <td>07039324538</td>
+                                <td>johnsmith@gmail.com</td>
+                                <td>5</td>
+                                <td>3</td>
+                                <td>2</td>
+                            </tr>
+                            <tr class="order-row">
+                                <td>02</td>
+                                <td>Paschal</td>
+                                <td>Doe</td>
+                                <td>08035647856</td>
+                                <td>paschaldoe@yahoo.com</td>
+                                <td>12</td>
+                                <td>12</td>
+                                <td>0</td>
+                            </tr>
+                            <tr class="order-row">
+                                <td>03</td>
+                                <td>Philip</td>
+                                <td>Wright</td>
+                                <td>08053879467</td>
+                                <td>philipwright@gmail.com</td>
+                                <td>8</td>
+                                <td>7</td>
+                                <td>1</td>
+                            </tr>
+                        </table>
+                        <div id="output"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer section -->
+
+    <footer class="dash-footer">
+        <p>&copy; Copyright 2018, SendIT Courier Services. All Rights Reserved.</p>
+    </footer>
+
+    <script src="../js/jwt-decode.js"></script>
+    <script src="../js/users.js"></script>
+
+</body>
+
+</html>

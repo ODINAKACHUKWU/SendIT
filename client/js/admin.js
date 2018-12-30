@@ -28,11 +28,13 @@ const makeAdmin = async (event) => {
     if (res.status === 403) {
       window.location.href = `./user-details.html?id=${userId}`;
       output.innerHTML = jsonRes.message;
+      output.style.color = 'red';
       return;
     }
     if (res.ok) {
       window.location.href = `./user-details.html?id=${userId}`;
       output.innerHTML = jsonRes.message;
+      output.style.color = 'green';
       return;
     }
   } catch (error) {

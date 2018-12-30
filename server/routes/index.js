@@ -44,4 +44,6 @@ router.post('/auth/login', validLogin, UserController.loginUser);
 
 router.put('/users/:id/role', AuthenticateUser.verifyToken, UserController.assignAdmin);
 
+router.put('/users/:id/regular', AuthenticateUser.verifyToken, UserController.assignRegular);
+
 export default router;

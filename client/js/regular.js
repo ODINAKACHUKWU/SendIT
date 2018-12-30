@@ -13,7 +13,7 @@ const makeRegular = async (event) => {
     category: 'Regular',
   });
 
-  const res = await fetch(`${path}/users/${userId}/role`, {
+  const res = await fetch(`${path}/users/${userId}/regular`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'Application/json',
@@ -28,10 +28,14 @@ const makeRegular = async (event) => {
     if (res.status === 403) {
       window.location.href = `./user-details.html?id=${userId}`;
       display.innerHTML = jsonRes.message;
+      output.style.color = 'red';
+      return;
     }
     if (res.ok) {
       window.location.href = `./user-details.html?id=${userId}`;
       display.innerHTML = jsonRes.message;
+      output.style.color = 'green';
+      return;
     }
   } catch (error) {
     console.log(`There is an error: ${error.message}`);

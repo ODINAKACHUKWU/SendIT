@@ -68,7 +68,7 @@ This is a courier service that helps users deliver parcels to different destinat
 
 <ul>
   <li>https://solomon-sendit-api.herokuapp.com/api/v1</li>
-  <li>https://localhost:3100/api/v1</li>
+  <li>http://localhost:3100/api/v1</li>
   <li>https://odinakachukwu.github.io/SendIT/UI/index.html</li>
 </ul>
 

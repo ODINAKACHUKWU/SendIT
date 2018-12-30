@@ -42,6 +42,6 @@ router.post('/auth/signup', validSignup, UserController.registerUser);
 
 router.post('/auth/login', validLogin, UserController.loginUser);
 
-router.put('/users/:id/category', AuthenticateUser.verifyToken, UserController.assignAdmin);
+router.put('/users/:id/role', AuthenticateUser.verifyToken, UserController.assignAdmin);
 
 export default router;

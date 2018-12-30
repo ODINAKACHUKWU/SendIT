@@ -19,7 +19,7 @@ const getUserParcels = async () => {
       const display = jsonRes.data;
 
       if (typeof (display) === 'undefined') {
-        output.innerHTML = 'You have not created any parcel delivery order.';
+        output.innerHTML = 'You have no parcel delivery order.';
         return;
       }
 
@@ -27,44 +27,18 @@ const getUserParcels = async () => {
 
       display.forEach((parcel) => {
         displayToUser += `
-        <ul>
-        <li>ID: ${parcel.id}</li>
-        <li>Receiver: ${parcel.receiver}</li>
-        <li>Item: ${parcel.item}</li>
-        <li>Schedule: ${parcel.schedule}</li>
-        <li>Present Location: ${parcel.present_location}</li>
-        <li>Status: ${parcel.order_status}</li>
-        </ul>
+        <div id="parcel" class="order-row">
+          <div><b>ID:</b> ${parcel.id}</div>
+          <div><b>Receiver:</b> ${parcel.receiver}</div>
+          <div><b>Item:</b> ${parcel.item}</div>
+          <div><b>Schedule:</b> ${parcel.schedule}</div>
+          <div><b>Present Location:</b> ${parcel.present_location}</div>
+          <div><b>Status:</b> ${parcel.order_status}</div>
+          <a href="./parcel-details.html?id=${parcel.id}">See details</a>
+        </div><br>
         `;
       });
       output.innerHTML = displayToUser;
-
-      //   const display = () => {
-      //     // console.log(response);
-      //     // result.innerHTML = response;
-      //     // result.style.fontFamily = 'arial';
-      //     let output = '<h2>Parcels</h2>';
-      //     response.forEach((parcel) => {
-      //       // output += `
-      //       //     <ul>
-      //       //         <li>UserID: ${post.userId}</li>
-      //       //         <li>ID: ${post.id}</li>
-      //       //         <li>Title: ${post.title}</li>
-      //       //         <li>Post: ${post.body}</li>
-      //       //     </ul>
-      //       // `;
-      //       output += `
-      //                     <div>
-      //                         <h3>${parcel.title}</h3>
-      //                         <p>${parcel.body}</p>
-      //                     </div>
-      //                 `;
-      //     });
-      //     result.innerHTML = output;
-      //     result.style.fontFamily = 'arial';
-      //   };
-
-    //   display();
     }
   } catch (error) {
     console.log(`There is an error: ${error.message}`);

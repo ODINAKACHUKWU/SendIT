@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SendIT | Order details</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+</head>
+
+<body>
+    <div id="heading"></div>
+    <div>
+        <p id="orderId"></p>
+        <p id="userId"></p>
+        <p id="orderSender"></p>
+        <p id="orderReceiver"></p>
+        <p id="orderItem"></p>
+        <p id="orderSchedule"></p>
+        <p id="orderPickup"></p>
+        <p id="orderDestination"></p>
+        <p id="orderLocation"></p>
+        <p id="orderPrice"></p>
+        <p id="orderStatus"></p>
+        <p id="dateCreated"></p>
+    </div>
+    <div id="output"></div>
+    <div>
+        <button id="status">Mark as delivered</button>
+        <button id="location">Change location</button>
+    </div>
+    <!-- The Modal -->
+    <div id="locationModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                
+                <div>
+                    <input type="text" id="locationStreet" name="street" placeholder="Street" required>
+                </div>
+    
+                <div>
+                    <input type="text" id="locationCity" name="city" placeholder="City" required>
+                </div>
+    
+                <div>
+                    <input type="text" id="locationState" name="state" placeholder="State" required>
+                </div>
+               
+                <div id="alert"></div>
+    
+                <div>
+                    <button id="ok" class="btn">OK</button>
+                </div>
+            </div>
+    
+        </div>
+
+    <script src="../js/parcel-details.js"></script>
+    <script src="../js/status.js"></script>
+    <script src="../js/locationModal.js"></script>
+    <script src="../js/location.js"></script>
+</body>
+
+</html>

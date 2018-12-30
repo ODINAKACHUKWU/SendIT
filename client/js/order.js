@@ -25,7 +25,7 @@ const createOrder = async (event) => {
   const item = deliveryItem.value;
   const pickupLocation = `${senderStreet.value}, ${senderCity.value}, ${senderState.value}.`;
   const destination = `${receiverStreet.value}, ${receiverCity.value}, ${receiverState.value}.`;
-  const schedule = `${date.value}:${time.value}`;
+  const schedule = `${date.value} ${time.value}`;
   const presentLocation = pickupLocation;
   const qty = quantity.value;
   const itemSize = size.value;
@@ -53,7 +53,6 @@ const createOrder = async (event) => {
 
   try {
     const token = localStorage.getItem('token');
-    const decoded = jwt_decode(token);
     const response = await fetch(`${url}/parcels`, {
       method: 'POST',
       headers: {
@@ -69,19 +68,14 @@ const createOrder = async (event) => {
       if (jsonResponse.message === 'Please enter an item') {
         output.innerHTML = 'Please enter your parcel details in the parcel description section';
       }
+      output.innerHTML = 'Please fill out all sections in the form';
     }
 
     if (response.ok) {
       if (response.status === 201) {
-        output.innerHTML = 'Parcel delivery order has been successfully created';
-        const displayDashboard = () => {
-          if (decoded.category === 'Regular') {
-            window.location.href = './user-dashboard.html';
-          } else if (decoded.category === 'Admin') {
-            window.location.href = './admin-dashboard.html';
-          }
-        };
-        setTimeout(displayDashboard(), 5000);
+        const parcel = jsonResponse.data;
+        const parcelId = parcel.id;
+        window.location.href = `./order-review.html?id=${parcelId}`;
       }
     }
   } catch (error) {

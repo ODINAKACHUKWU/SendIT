@@ -28,10 +28,12 @@ const changeStatus = async (event) => {
     if (res.status === 403) {
       window.location.href = `./admin-parcelDetails.html?id=${parcelId}`;
       output.innerHTML = jsonRes.message;
+      output.style.color = 'red';
     }
     if (res.ok) {
       window.location.href = `./admin-parcelDetails.html?id=${parcelId}`;
       output.innerHTML = jsonRes.message;
+      output.style.color = 'red';
     }
   } catch (error) {
     console.log(`There is an error: ${error.message}`);

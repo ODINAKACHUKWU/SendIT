@@ -1,8 +1,22 @@
 const output = document.getElementById('output');
 const url = 'http://localhost:3100/api/v1';
+const user = document.querySelector('.user');
 
 const getCustomers = async () => {
   const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+
+  const response = await fetch(`${url}/users/${decoded.userId}`, {
+    method: 'GET',
+    headers: {
+      'x-access-token': token,
+    },
+  });
+  const jsonResponse = await response.json();
+  if (response.ok) {
+    const display = jsonResponse.data;
+    user.innerHTML = `Welcome ${display.first_name} ${display.last_name}!`;
+  }
 
   const res = await fetch(`${url}/users`, {
     method: 'GET',
@@ -21,13 +35,14 @@ const getCustomers = async () => {
 
       display.forEach((customer) => {
         displayToAdmin += `
-        <div class="order-row">
-          <div><b>ID:</b> ${customer.userid}</div>
-          <div><b>Name:</b> ${customer.first_name} ${customer.last_name}</div>
-          <div><b>Email:</b> ${customer.email}</div>
-          <div><b>Phone Number:</b> ${customer.phone_number}</div>
-          <a href="./user-details.html?id=${customer.userid}">See details</a>
-        </div><br>
+        <div class="col-12 col-s-12 tab">
+        <a href="./user-details.html?id=${customer.userid}">
+          <span>${customer.userid}</span>|
+          <span><b>${customer.first_name} ${customer.last_name}</b></span>|
+          <span>${customer.email}</span>|
+          <span>${customer.phone_number}</span>
+        </a>
+        </div>
         `;
       });
       output.innerHTML = displayToAdmin;

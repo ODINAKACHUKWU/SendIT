@@ -1,9 +1,22 @@
 const output = document.getElementById('output');
+const user = document.querySelector('.user');
 const url = 'http://localhost:3100/api/v1';
 
 const getUserParcels = async () => {
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
+
+  const response = await fetch(`${url}/users/${decoded.userId}`, {
+    method: 'GET',
+    headers: {
+      'x-access-token': token,
+    },
+  });
+  const jsonResponse = await response.json();
+  if (response.ok) {
+    const display = jsonResponse.data;
+    user.innerHTML = `Welcome ${display.first_name} ${display.last_name}!`;
+  }
 
   const res = await fetch(`${url}/users/${decoded.userId}/parcels`, {
     method: 'GET',
@@ -23,19 +36,20 @@ const getUserParcels = async () => {
         return;
       }
 
-      let displayToUser = '<h2>Parcel Orders Created</h2>';
+      let displayToUser = '<h2 class="row heading">Parcel Orders Created</h2>';
 
       display.forEach((parcel) => {
         displayToUser += `
-        <div id="parcel" class="order-row">
-          <div><b>ID:</b> ${parcel.id}</div>
-          <div><b>Receiver:</b> ${parcel.receiver}</div>
-          <div><b>Item:</b> ${parcel.item}</div>
-          <div><b>Schedule:</b> ${parcel.schedule}</div>
-          <div><b>Present Location:</b> ${parcel.present_location}</div>
-          <div><b>Status:</b> ${parcel.order_status}</div>
-          <a href="./parcel-details.html?id=${parcel.id}">See details</a>
-        </div><br>
+        <div class="col-12 col-s-12 tab">
+        <a href="./parcel-details.html?id=${parcel.id}">
+          <span><b>${parcel.id}</b></span>|  
+          <span><b>${parcel.receiver}</b></span>|
+          <span>${parcel.item}</span>|
+          <span>${parcel.present_location}</span>|
+          <span>${parcel.schedule}</span>|
+          <span><b>${parcel.order_status}</b></span>
+        </a>
+        </div>
         `;
       });
       output.innerHTML = displayToUser;

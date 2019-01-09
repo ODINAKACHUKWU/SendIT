@@ -6,63 +6,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SendIT | Order details</title>
-    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="myStyle.css" />
     <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-    <div id="heading"></div>
-    <div>
-        <p id="orderId"></p>
-        <p id="userId"></p>
-        <p id="orderSender"></p>
-        <p id="orderReceiver"></p>
-        <p id="orderItem"></p>
-        <p id="orderSchedule"></p>
-        <p id="orderPickup"></p>
-        <p id="orderDestination"></p>
-        <p id="orderLocation"></p>
-        <p id="orderPrice"></p>
-        <p id="orderStatus"></p>
-        <p id="dateCreated"></p>
-    </div>
-    <div id="output"></div>
-    <div>
-        <button id="status">Mark as delivered</button>
-        <button id="location">Change location</button>
-    </div>
-    <!-- The Modal -->
-    <div id="locationModal" class="modal">
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                
-                <div>
-                    <input type="text" id="locationStreet" name="street" placeholder="Street" required>
-                </div>
-    
-                <div>
-                    <input type="text" id="locationCity" name="city" placeholder="City" required>
-                </div>
-    
-                <div>
-                    <input type="text" id="locationState" name="state" placeholder="State" required>
-                </div>
-               
-                <div id="alert"></div>
-    
-                <div>
-                    <button id="ok" class="btn">OK</button>
-                </div>
+    <div class="header row">
+        <a href="user-dashboard.html"><img src="images/logo.png" alt="SendIT Logo" class="logo"></a>
+        <a href="#" id="logout">Log Out <i class="fa fa-sign-out"></i></a>
+        <a href="#" class="icon"><i class="fa fa-bars" id="iconBar"></i></a>
+    </div>
+
+    <div class="user"></div>
+
+    <div class="row content">
+        <div class="col-3 col-s-3 menu content">
+            <div class="dashboard"><i class="fa fa-home"></i> Dashboard</div>
+            <div id="menu">
+                <a href="admin-dashboard.html">Customers</a>
+                <a href="admin-orders.html" class="active">Orders</a>
+                <a href="#">Profile</a>
             </div>
-    
         </div>
 
+        <div class="col-9 col-s-9">
+            <div id="heading"></div>
+            <div class="row faIcon">
+                <i class="fa fa-arrow-left" id="back" title="Back to Orders page"></i>
+                <i class="fa fa-check" id="status" title="Mark as delivered"></i>
+                <i class="fa fa-edit" id="location" title="Change location"></i>
+            </div>
+            <div>
+                <p id="orderId"></p>
+                <p id="userId"></p>
+                <p id="orderSender"></p>
+                <p id="orderReceiver"></p>
+                <p id="orderItem"></p>
+                <p id="orderSchedule"></p>
+                <p id="orderPickup"></p>
+                <p id="orderDestination"></p>
+                <p id="orderLocation"></p>
+                <p id="orderPrice"></p>
+                <p id="orderStatus"></p>
+                <p id="dateCreated"></p>
+            </div>
+            <div id="output"></div>
+            
+            <!-- The Modal -->
+            <div id="locationModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+
+                    <div>
+                        <input type="text" id="locationStreet" name="street" placeholder="Street" required>
+                    </div>
+
+                    <div>
+                        <input type="text" id="locationCity" name="city" placeholder="City" required>
+                    </div>
+
+                    <div>
+                        <input type="text" id="locationState" name="state" placeholder="State" required>
+                    </div>
+
+                    <div id="alert"></div>
+
+                    <div>
+                        <button id="ok" class="btn">OK</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row footer">
+        <p>&copy; Copyright 2018, SendIT Courier Services. All Rights Reserved.</p>
+    </div>
+
+    <script>
+        const button = document.getElementById('iconBar');
+        const back = document.getElementById('back');
+
+        const displayMenu = () => {
+            const menu = document.getElementById('menu');
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+
+        const loadOrdersPage = () => {
+            window.location.href = 'admin-orders.html';
+        }
+
+        button.addEventListener('click', displayMenu);
+        back.addEventListener('click', loadOrdersPage);
+    </script>
+
+    <script src="../js/jwt-decode.js"></script>
     <script src="../js/parcel-details.js"></script>
     <script src="../js/status.js"></script>
     <script src="../js/locationModal.js"></script>
     <script src="../js/location.js"></script>
+    <script src="../js/logout.js"></script>
+
 </body>
 
 </html>

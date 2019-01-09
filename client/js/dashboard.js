@@ -1,6 +1,7 @@
 const delivered = document.getElementById('delivered');
 const transit = document.getElementById('transit');
 const orders = document.getElementById('orders');
+const user = document.querySelector('.user');
 const url = 'http://localhost:3100/api/v1';
 
 const displayParcelOverview = async () => {
@@ -8,6 +9,18 @@ const displayParcelOverview = async () => {
   const decoded = jwt_decode(token);
 
   try {
+    const response = await fetch(`${url}/users/${decoded.userId}`, {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    });
+    const jsonResponse = await response.json();
+    if (response.ok) {
+      const display = jsonResponse.data;
+      user.innerHTML = `Welcome ${display.first_name} ${display.last_name}!`;
+    }
+
     const res = await fetch(`${url}/users/${decoded.userId}/all`, {
       method: 'GET',
       headers: {

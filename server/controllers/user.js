@@ -50,16 +50,15 @@ class UserController {
    * @returns {object} return status code 200
    */
   static getUserById(req, res) {
+    const id = parseInt(req.params.id, 10);
     const { decoded } = req.body;
 
-    if (decoded.category !== 'Admin') {
+    if (decoded.userId !== id && decoded.category !== 'Admin') {
       return res.status(403).send({
         status: 'Failure',
         message: 'You are not an admin',
       });
     }
-
-    const id = parseInt(req.params.id, 10);
 
     pool.query('SELECT UserID, first_name, last_name, phone_number, email, category FROM users WHERE userId = $1', [id], (error, results) => {
       if (error) {

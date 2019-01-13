@@ -7,12 +7,26 @@ const userEmail = document.getElementById('email');
 const phoneNumber = document.getElementById('phoneNumber');
 const role = document.getElementById('role');
 const endpoint = 'http://localhost:3100/api/v1';
+const user = document.querySelector('.user');
 
 const getUserDetails = async () => {
   const token = localStorage.getItem('token');
   const currentPage = window.location.search;
   const id = currentPage.split('=').pop();
   const userId = parseInt(id, 10);
+  const decoded = jwt_decode(token);
+
+  const response = await fetch(`${url}/users/${decoded.userId}`, {
+    method: 'GET',
+    headers: {
+      'x-access-token': token,
+    },
+  });
+  const jsonResponse = await response.json();
+  if (response.ok) {
+    const display = jsonResponse.data;
+    user.innerHTML = `Welcome ${display.first_name} ${display.last_name}!`;
+  }
 
   const res = await fetch(`${endpoint}/users/${userId}`, {
     method: 'GET',
@@ -29,7 +43,7 @@ const getUserDetails = async () => {
       const {
         userid, first_name, last_name, email, phone_number, category,
       } = display;
-      const title = '<h2>Customer Details</h2>';
+      const title = '<h2 class="row heading">Customer Details</h2>';
 
       heading.innerHTML = title;
       customerId.innerHTML = `<b>Customer ID:</b> ${userid}`;

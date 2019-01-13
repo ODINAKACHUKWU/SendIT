@@ -16,6 +16,24 @@ const date = document.getElementById('date');
 const time = document.getElementById('time');
 const output = document.getElementById('output');
 const url = 'http://localhost:3100/api/v1';
+const displayUser = document.querySelector('.user');
+const token = localStorage.getItem('token');
+
+const loadUserName = async () => {
+  const decoded = jwt_decode(token);
+
+  const res = await fetch(`${url}/users/${decoded.userId}`, {
+    method: 'GET',
+    headers: {
+      'x-access-token': token,
+    },
+  });
+  const jsonRes = await res.json();
+  if (res.ok) {
+    const display = jsonRes.data;
+    displayUser.innerHTML = `Welcome ${display.first_name} ${display.last_name}!`;
+  }
+};
 
 const createOrder = async (event) => {
   event.preventDefault();
@@ -52,7 +70,6 @@ const createOrder = async (event) => {
   });
 
   try {
-    const token = localStorage.getItem('token');
     const response = await fetch(`${url}/parcels`, {
       method: 'POST',
       headers: {
@@ -83,4 +100,5 @@ const createOrder = async (event) => {
   }
 };
 
+window.addEventListener('load', loadUserName);
 btn.addEventListener('submit', createOrder);

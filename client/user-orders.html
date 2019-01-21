@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SendIT | User details</title>
+    <title>SendIT | Orders</title>
     <link rel="stylesheet" type="text/css" media="screen" href="myStyle.css" />
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -32,24 +32,7 @@
         </div>
 
         <div class="col-9 col-s-9">
-            <div id="heading"></div>
-            <div class="row faIcon">
-                <i class="fa fa-arrow-left" id="back" title="Back to Customers page"></i>
-            </div>
-            <div>
-                <p id="customerId"></p>
-                <p id="firstName"></p>
-                <p id="lastName"></p>
-                <p id="email"></p>
-                <p id="phoneNumber"></p>
-                <p id="role"></p>
-            </div>
             <div id="output"></div>
-            <div>
-                <button id="admin" class="rev-btn">Make Admin</button>
-                <button id="regular" class="rev-btn">Make Regular</button>
-                <a href="user-orders.html" class="rev-btn">Parcel Orders</a>
-            </div>
         </div>
     </div>
 
@@ -59,7 +42,7 @@
 
     <script>
         const button = document.getElementById('iconBar');
-        const back = document.getElementById('back');
+
         const displayMenu = () => {
             const menu = document.getElementById('menu');
             if (menu.style.display === "block") {
@@ -69,18 +52,13 @@
             }
         }
 
-        const loadCustomersPage = () => {
-            window.location.href = 'admin-dashboard.html';
-        }
         button.addEventListener('click', displayMenu);
-        back.addEventListener('click', loadCustomersPage);
     </script>
 
-    <script src="../js/jwt-decode.js"></script>
-    <script src="../js/user-details.js"></script>
-    <script src="../js/admin.js"></script>
-    <script src="../js/regular.js"></script>
-    <script src="../js/logout.js"></script>
+    <script src="./js/parcel-details.js"></script>
+    <script src="./js/jwt-decode.js"></script>
+    <script src="./js/userparcels.js"></script>
+    <script src="./js/logout.js"></script>
 
 </body>
 

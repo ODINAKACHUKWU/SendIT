@@ -25,14 +25,40 @@
         <div class="col-3 col-s-3 menu content">
             <div class="dashboard"><i class="fa fa-home"></i> Dashboard</div>
             <div id="menu">
-                <a href="admin-dashboard.html" class="active">Customers</a>
-                <a href="admin-orders.html">Orders</a>
+                <a href="user-dashboard.html" class="active">Overview</a>
+                <a href="orders.html">Orders</a>
+                <a href="order-page.html">Create Order</a>
                 <a href="#">Profile</a>
             </div>
         </div>
 
-        <div class="col-9 col-s-9 main content">
-            <div id="output"></div>
+        <div class="col-9 col-s-9">
+            <div class="row heading">
+                <h2>Overview</h2>
+            </div>
+            <div class="row content">
+                <div class="col-4 col-s-4 table">
+                    <p class="title">
+                        Parcel Order Created
+                    </p>
+                    <hr>
+                    <p class="count" id="orders"></p>
+                </div>
+                <div class="col-4 col-s-4 table">
+                    <p class="title">
+                        Delivered Parcel Order
+                    </p>
+                    <hr>
+                    <p class="count" id="delivered"></p>
+                </div>
+                <div class="col-4 col-s-4 table">
+                    <p class="title">
+                        Pending Parcel Order
+                    </p>
+                    <hr>
+                    <p class="count" id="transit"></p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -53,9 +79,9 @@
         button.addEventListener('click', displayMenu);
     </script>
 
-    <script src="../js/jwt-decode.js"></script>
-    <script src="../js/users.js"></script>
-    <script src="../js/logout.js"></script>
+    <script src="./js/jwt-decode.js"></script>
+    <script src="./js/dashboard.js"></script>
+    <script src="./js/logout.js"></script>
 
 </body>
 

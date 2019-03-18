@@ -8,7 +8,10 @@
     "test": "set NODE_ENV=test && nyc mocha --require @babel/register test/test.js --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "heroku-postbuild": "babel ./server -d ./build",
-    "start-prod": "node ./build/index.js"
+    "build": "npm run clean && babel ./server -d ./build",
+    "clean": "rm -rf ./build",
+    "start-prod": "node ./build/index.js",
+    "migrate-table": "babel-node ./server/database/createTable.js"
   },
   "repository": {
     "type": "git",

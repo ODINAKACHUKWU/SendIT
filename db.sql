@@ -15,7 +15,7 @@ CREATE TABLE parcels (
     id SERIAL PRIMARY KEY,
     UserID INT NOT NULL,
     sender TEXT NOT NULL,
-    reciever TEXT NOT NULL,
+    receiver TEXT NOT NULL,
     item TEXT NOT NULL,
     pickup_location TEXT NOT NULL,
     destination TEXT NOT NULL,

@@ -131,13 +131,14 @@ class UserController {
           const token = jwt.sign({
             userId: user.userid,
             category: user.category,
+            fullName: `${user.first_name} ${user.last_name}`,
           },
           process.env.SECRET, { expiresIn: '3d' });
 
           res.status(201).send({
             status: 'Success',
             message: `Account created for ${firstName} ${lastName}`,
-            data: token,
+            token,
           });
         });
     });
@@ -180,13 +181,14 @@ class UserController {
         const token = jwt.sign({
           userId: user.userid,
           category: user.category,
+          fullName: `${user.first_name} ${user.last_name}`,
         },
         process.env.SECRET, { expiresIn: '3d' });
 
         return res.status(200).send({
           status: 'Success',
           message: `${user.first_name} ${user.last_name} is Logged in`,
-          data: token,
+          token,
         });
       }
     });

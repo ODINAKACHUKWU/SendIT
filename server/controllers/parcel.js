@@ -230,6 +230,7 @@ class ParcelController {
             return res.status(200).send({
               status: 'Success',
               message: 'There is no parcel',
+              data: parcels,
             });
           }
           return res.status(200).send({

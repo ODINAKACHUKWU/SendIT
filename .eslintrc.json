@@ -7,7 +7,8 @@
     "rules": {
         "consistent-return": "off",
         "no-console": "off",
-        "no-undef": "off"
+        "no-undef": "off",
+        "no-restricted-globals": "off"
       },
     "parser": "babel-eslint"
 }

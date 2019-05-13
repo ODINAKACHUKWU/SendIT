@@ -6,11 +6,14 @@ import cors from 'cors';
 import path from 'path';
 
 import router from './routes';
+import createTables from './database/migrations/createTables';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3100;
+
+createTables();
 
 app.use(logger('dev'));
 app.use(cors());

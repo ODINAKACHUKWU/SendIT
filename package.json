@@ -11,7 +11,9 @@
     "build": "npm run clean && babel ./server -d ./build",
     "clean": "rm -rf ./build",
     "start-prod": "node ./build/index.js",
-    "migrate-table": "babel-node ./server/database/createTable.js"
+    "db:drop": "babel-node ./server/database/migrations/dropTables.js",
+    "db:seed": "babel-node ./server/database/seeds/migrate.js",
+    "db:refresh": "npm run db:drop && npm run start"
   },
   "repository": {
     "type": "git",

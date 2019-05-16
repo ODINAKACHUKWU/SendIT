@@ -13,7 +13,8 @@
     "start-prod": "node ./build/index.js",
     "db:drop": "babel-node ./server/database/migrations/dropTables.js",
     "db:seed": "babel-node ./server/database/seeds/migrate.js",
-    "db:refresh": "npm run db:drop && npm run start"
+    "db:refresh": "npm run db:drop && npm run start",
+    "db:create": "babel-node ./server/database/migrations/createTables.js"
   },
   "repository": {
     "type": "git",

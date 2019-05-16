@@ -4,9 +4,7 @@ import { userSchema, parcelSchema } from '../schemas';
 const tables = [userSchema, parcelSchema];
 
 const createTables = () => {
-  tables.forEach((table) => {
-    db.create(table);
-  });
+  tables.map(table => db.create(table));
 };
 
-export default createTables;
+createTables();

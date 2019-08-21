@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import pool from '../configs/db';
+import { hashPassword, comparePassword } from '../helpers/password';
 
 class UserController {
   /**
@@ -18,29 +19,32 @@ class UserController {
       });
     }
 
-    pool.query('SELECT UserID, first_name, last_name, phone_number, email, category FROM users ORDER BY userId ASC', (error, results) => {
-      if (error) {
-        return res.status(500).send({
-          status: 'Failure',
-          message: error.message,
-        });
-      }
+    pool.query(
+      'SELECT UserID, first_name, last_name, phone_number, email, category FROM users ORDER BY userId ASC',
+      (error, results) => {
+        if (error) {
+          return res.status(500).send({
+            status: 'Failure',
+            message: error.message,
+          });
+        }
 
-      const users = results.rows;
+        const users = results.rows;
 
-      if (users.length === 0) {
+        if (users.length === 0) {
+          return res.status(200).send({
+            status: 'Success',
+            message: 'There is no user',
+            data: users,
+          });
+        }
         return res.status(200).send({
           status: 'Success',
-          message: 'There is no user',
+          message: 'Users retrieved',
           data: users,
         });
-      }
-      return res.status(200).send({
-        status: 'Success',
-        message: 'Users retrieved',
-        data: users,
-      });
-    });
+      },
+    );
   }
 
   /**
@@ -60,28 +64,32 @@ class UserController {
       });
     }
 
-    pool.query('SELECT UserID, first_name, last_name, phone_number, email, category FROM users WHERE userId = $1', [id], (error, results) => {
-      if (error) {
-        return res.status(500).send({
-          status: 'Failure',
-          message: error.message,
-        });
-      }
+    pool.query(
+      'SELECT UserID, first_name, last_name, phone_number, email, category FROM users WHERE userId = $1',
+      [id],
+      (error, results) => {
+        if (error) {
+          return res.status(500).send({
+            status: 'Failure',
+            message: error.message,
+          });
+        }
 
-      const user = results.rows[0];
+        const user = results.rows[0];
 
-      if (!user) {
-        return res.status(404).send({
-          status: 'Failure',
-          message: 'User not found',
+        if (!user) {
+          return res.status(404).send({
+            status: 'Failure',
+            message: 'User not found',
+          });
+        }
+        return res.status(200).send({
+          status: 'Success',
+          message: 'User retrieved',
+          data: user,
         });
-      }
-      return res.status(200).send({
-        status: 'Success',
-        message: 'User retrieved',
-        data: user,
-      });
-    });
+      },
+    );
   }
 
   /**
@@ -90,7 +98,7 @@ class UserController {
    * @param {object} res
    * @returns {string} return status code 201
    */
-  static registerUser(req, res) {
+  static async registerUser(req, res) {
     const {
       firstName,
       lastName,
@@ -100,48 +108,59 @@ class UserController {
       category,
     } = req.body;
 
-    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
-      if (error) {
-        return res.status(500).send({
-          status: 'Failure',
-          message: error.message,
-        });
-      }
+    const hashedPassword = await hashPassword(password);
 
-      const account = results.rows[0];
-
-      if (account) {
-        return res.status(400).send({
-          status: 'Failure',
-          message: `Account with the email address: ${email} already exist`,
-        });
-      }
-
-      pool.query('INSERT INTO users (first_name, last_name, phone_number, email, pass_word, category) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [firstName, lastName, phoneNumber, email, password,
-          category], (err, result) => {
-          if (err) {
-            return res.status(500).send({
-              status: 'Failure',
-              message: err.message,
-            });
-          }
-
-          const user = result.rows[0];
-          const token = jwt.sign({
-            userId: user.userid,
-            category: user.category,
-            fullName: `${user.first_name} ${user.last_name}`,
-          },
-          process.env.SECRET, { expiresIn: '3d' });
-
-          res.status(201).send({
-            status: 'Success',
-            message: `Account created for ${firstName} ${lastName}`,
-            token,
+    pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email],
+      (error, results) => {
+        if (error) {
+          return res.status(500).send({
+            status: 'Failure',
+            message: error.message,
           });
-        });
-    });
+        }
+
+        const account = results.rows[0];
+
+        if (account) {
+          return res.status(400).send({
+            status: 'Failure',
+            message: `Account with the email address: ${email} already exist`,
+          });
+        }
+
+        pool.query(
+          'INSERT INTO users (first_name, last_name, phone_number, email, pass_word, category) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+          [firstName, lastName, phoneNumber, email, hashedPassword, category],
+          (err, result) => {
+            if (err) {
+              return res.status(500).send({
+                status: 'Failure',
+                message: err.message,
+              });
+            }
+
+            const user = result.rows[0];
+            const token = jwt.sign(
+              {
+                userId: user.userid,
+                category: user.category,
+                fullName: `${user.first_name} ${user.last_name}`,
+              },
+              process.env.SECRET,
+              { expiresIn: '3d' },
+            );
+
+            res.status(201).send({
+              status: 'Success',
+              message: `Account created for ${firstName} ${lastName}`,
+              token,
+            });
+          },
+        );
+      },
+    );
   }
 
   /**
@@ -153,45 +172,55 @@ class UserController {
   static loginUser(req, res) {
     const { email, password } = req.body;
 
-    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
-      if (error) {
-        return res.status(500).send({
-          status: 'Failure',
-          message: error.message,
-        });
-      }
+    pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email],
+      async (error, results) => {
+        if (error) {
+          return res.status(500).send({
+            status: 'Failure',
+            message: error.message,
+          });
+        }
 
-      const user = results.rows[0];
+        const user = results.rows[0];
 
-      if (!user) {
-        return res.status(400).send({
-          status: 'Failure',
-          message: 'Invalid credentials',
-        });
-      }
+        if (!user) {
+          return res.status(400).send({
+            status: 'Failure',
+            message: 'Invalid credentials',
+          });
+        }
 
-      if (user && user.pass_word !== password) {
-        return res.status(400).send({
-          status: 'Failure',
-          message: 'Invalid credentials',
-        });
-      }
+        if (user) {
+          const isUser = await comparePassword(password, user.pass_word);
+          if (!isUser) {
+            return res.status(400).send({
+              status: 'Failure',
+              message: 'Invalid credentials',
+            });
+          }
 
-      if (user && user.pass_word === password) {
-        const token = jwt.sign({
-          userId: user.userid,
-          category: user.category,
-          fullName: `${user.first_name} ${user.last_name}`,
-        },
-        process.env.SECRET, { expiresIn: '3d' });
+          if (isUser) {
+            const token = jwt.sign(
+              {
+                userId: user.userid,
+                category: user.category,
+                fullName: `${user.first_name} ${user.last_name}`,
+              },
+              process.env.SECRET,
+              { expiresIn: '3d' },
+            );
 
-        return res.status(200).send({
-          status: 'Success',
-          message: `${user.first_name} ${user.last_name} is Logged in`,
-          token,
-        });
-      }
-    });
+            return res.status(200).send({
+              status: 'Success',
+              message: `${user.first_name} ${user.last_name} is Logged in`,
+              token,
+            });
+          }
+        }
+      },
+    );
   }
 
   /**
@@ -204,65 +233,69 @@ class UserController {
     const id = parseInt(req.params.id, 10);
     const { category, decoded } = req.body;
 
-    pool.query('SELECT * FROM users WHERE userid = $1', [id], (error, results) => {
-      if (error) {
-        return res.status(500).send({
-          status: 'Failure',
-          message: error.message,
-        });
-      }
-
-      const user = results.rows[0];
-
-      if (!user) {
-        return res.status(404).send({
-          status: 'Failure',
-          message: 'User not found',
-        });
-      }
-
-      if (user) {
-        if (decoded.category !== 'Admin') {
-          return res.status(403).send({
+    pool.query(
+      'SELECT * FROM users WHERE userid = $1',
+      [id],
+      (error, results) => {
+        if (error) {
+          return res.status(500).send({
             status: 'Failure',
-            message: 'You are not an admin',
+            message: error.message,
           });
         }
 
-        if (decoded.userId === user.userid) {
-          return res.status(403).send({
+        const user = results.rows[0];
+
+        if (!user) {
+          return res.status(404).send({
             status: 'Failure',
-            message: 'You are an Admin',
+            message: 'User not found',
           });
         }
 
-        if (user.category === 'Admin') {
-          return res.status(403).send({
-            status: 'Failure',
-            message: 'User is an Admin',
-          });
-        }
-
-        pool.query(
-          'UPDATE users SET category = $1 WHERE userid = $2 RETURNING UserID, first_name, last_name, phone_number, email, category',
-          [category, id],
-          (err, result) => {
-            if (err) {
-              return res.status(500).send({
-                status: 'Failure',
-                message: err.message,
-              });
-            }
-
-            return res.status(200).send({
-              status: 'Success',
-              message: 'User\'s category has been changed to Admin',
-              data: result.rows[0],
+        if (user) {
+          if (decoded.category !== 'Admin') {
+            return res.status(403).send({
+              status: 'Failure',
+              message: 'You are not an admin',
             });
-          },
-        );
-      }
-    });
+          }
+
+          if (decoded.userId === user.userid) {
+            return res.status(403).send({
+              status: 'Failure',
+              message: 'You are an Admin',
+            });
+          }
+
+          if (user.category === 'Admin') {
+            return res.status(403).send({
+              status: 'Failure',
+              message: 'User is an Admin',
+            });
+          }
+
+          pool.query(
+            'UPDATE users SET category = $1 WHERE userid = $2 RETURNING UserID, first_name, last_name, phone_number, email, category',
+            [category, id],
+            (err, result) => {
+              if (err) {
+                return res.status(500).send({
+                  status: 'Failure',
+                  message: err.message,
+                });
+              }
+
+              return res.status(200).send({
+                status: 'Success',
+                message: "User's category has been changed to Admin",
+                data: result.rows[0],
+              });
+            },
+          );
+        }
+      },
+    );
   }
 
   /**
@@ -275,65 +308,69 @@ class UserController {
     const id = parseInt(req.params.id, 10);
     const { category, decoded } = req.body;
 
-    pool.query('SELECT * FROM users WHERE userid = $1', [id], (error, results) => {
-      if (error) {
-        return res.status(500).send({
-          status: 'Failure',
-          message: error.message,
-        });
-      }
-
-      const user = results.rows[0];
-
-      if (!user) {
-        return res.status(404).send({
-          status: 'Failure',
-          message: 'User not found',
-        });
-      }
-
-      if (user) {
-        if (decoded.category !== 'Admin') {
-          return res.status(403).send({
+    pool.query(
+      'SELECT * FROM users WHERE userid = $1',
+      [id],
+      (error, results) => {
+        if (error) {
+          return res.status(500).send({
             status: 'Failure',
-            message: 'You are not an admin',
+            message: error.message,
           });
         }
 
-        if (decoded.userId === user.userid) {
-          return res.status(403).send({
+        const user = results.rows[0];
+
+        if (!user) {
+          return res.status(404).send({
             status: 'Failure',
-            message: 'You are not authorized to change your role!',
+            message: 'User not found',
           });
         }
 
-        if (user.category === 'Regular') {
-          return res.status(403).send({
-            status: 'Failure',
-            message: 'User is a Regular',
-          });
-        }
-
-        pool.query(
-          'UPDATE users SET category = $1 WHERE userid = $2 RETURNING UserID, first_name, last_name, phone_number, email, category',
-          [category, id],
-          (err, result) => {
-            if (err) {
-              return res.status(500).send({
-                status: 'Failure',
-                message: err.message,
-              });
-            }
-
-            return res.status(200).send({
-              status: 'Success',
-              message: 'User\'s category has been changed to Regular',
-              data: result.rows[0],
+        if (user) {
+          if (decoded.category !== 'Admin') {
+            return res.status(403).send({
+              status: 'Failure',
+              message: 'You are not an admin',
             });
-          },
-        );
-      }
-    });
+          }
+
+          if (decoded.userId === user.userid) {
+            return res.status(403).send({
+              status: 'Failure',
+              message: 'You are not authorized to change your role!',
+            });
+          }
+
+          if (user.category === 'Regular') {
+            return res.status(403).send({
+              status: 'Failure',
+              message: 'User is a Regular',
+            });
+          }
+
+          pool.query(
+            'UPDATE users SET category = $1 WHERE userid = $2 RETURNING UserID, first_name, last_name, phone_number, email, category',
+            [category, id],
+            (err, result) => {
+              if (err) {
+                return res.status(500).send({
+                  status: 'Failure',
+                  message: err.message,
+                });
+              }
+
+              return res.status(200).send({
+                status: 'Success',
+                message: "User's category has been changed to Regular",
+                data: result.rows[0],
+              });
+            },
+          );
+        }
+      },
+    );
   }
 }
 

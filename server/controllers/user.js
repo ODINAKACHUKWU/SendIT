@@ -148,7 +148,7 @@ class UserController {
                 category: user.category,
                 fullName: `${user.first_name} ${user.last_name}`,
               },
-              process.env.SECRET,
+              process.env.JWT_SECRET,
               { expiresIn: '3d' },
             );
 
@@ -208,7 +208,7 @@ class UserController {
                 category: user.category,
                 fullName: `${user.first_name} ${user.last_name}`,
               },
-              process.env.SECRET,
+              process.env.JWT_SECRET,
               { expiresIn: '3d' },
             );
 

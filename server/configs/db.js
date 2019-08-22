@@ -1,16 +1,24 @@
 import { Pool } from 'pg';
-import config from './config';
+import dotenv from 'dotenv';
 
-let option;
+dotenv.config();
+
+let connectionString;
+const { DEV_DATABASE_URL, DATABASE_URL, TEST_DATABASE_URL } = process.env;
 
 if (process.env.NODE_ENV === 'test') {
-  option = config.test;
-} else if (process.env.NODE_ENV === 'development') {
-  option = config.dev;
+  connectionString = TEST_DATABASE_URL;
 } else if (process.env.NODE_ENV === 'production') {
-  option = config.production;
+  connectionString = DATABASE_URL;
+} else {
+  connectionString = DEV_DATABASE_URL;
 }
 
-const pool = new Pool(option);
+const pool = new Pool({ connectionString });
 
-export default pool;
+module.exports = {
+  query: (text, params, callback) => pool.query(text, params, callback),
+  on: (text, callback) => pool.on(text, callback),
+  connection: () => pool.connect(),
+  end: () => pool.end(),
+};

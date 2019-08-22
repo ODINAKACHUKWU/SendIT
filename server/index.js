@@ -18,22 +18,34 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use('/api/v1', router);
 
+app.get('/', (req, res) => {
+  res.send(`<h1>Welcome to SendIT</h1>
+            <h3>SendIT is a courier service that helps users deliver parcels to different destinations.
+            It provides courier quotes based on weight categories.</h3>
+            <p>For any more information please visit our
+            <a href='https://github.com/ODINAKACHUKWU/SendIT'>
+            Github repo!</a></p>
+            <h4>Thank you for visiting  &#x1F600;</h4>
+            `);
+});
+
 app.get('/api/v1', (req, res) => {
   res.status(200).send({
     status: 'Success',
-    message: 'Connection Ok',
+    message: 'Connected to SendIT v1 API',
   });
 });
 
 app.get('*', (req, res) => {
-  res.status(400).send({
+  res.status(400).json({
     status: 'Failure',
-    message: 'No resources found',
+    message: 'Oops! Not found',
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`Express server listening on port ${PORT}!`);
+  // eslint-disable-next-line no-console
+  console.log(`Server listening on port ${PORT}...`);
 });
 
 export default app;

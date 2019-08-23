@@ -1,36 +1,13 @@
 import chaiHttp from 'chai-http';
 import chai, { expect } from 'chai';
-import myApp from '../server/index';
+import app from '../../../server/index';
 
 chai.use(chaiHttp);
 
-describe('Server', () => {
-  it('should return Connection Ok', (done) => {
-    chai.request(myApp)
-      .get('/api/v1')
-      .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('Connection Ok');
-        expect(res.body.status).to.equal('Success');
-        done();
-      });
-  });
-
-  it('should return No resources found', (done) => {
-    chai.request(myApp)
-      .get('/*')
-      .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('No resources found');
-        expect(res.body.status).to.equal('Failure');
-        done();
-      });
-  });
-});
-
 describe('Authentication', () => {
-  it('should return a notification message if user is not verified', (done) => {
-    chai.request(myApp)
+  it('should return a notification message if user is not verified', done => {
+    chai
+      .request(app)
       .put('/api/v1/parcels/10/cancel')
       .set('content-type', 'appication/json')
       .end((err, res) => {
@@ -51,7 +28,6 @@ describe('Authentication', () => {
   //     });
   // });
 });
-
 
 // // describe('Parcel API endpoints', () => {
 // //   it('should fetch all the parcels', (done) => {

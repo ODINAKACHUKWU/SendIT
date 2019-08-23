@@ -11,10 +11,10 @@
     "build": "npm run clean && babel ./server -d ./build",
     "clean": "rm -rf ./build",
     "start-prod": "node ./build/index.js",
-    "db:drop": "babel-node ./server/database/migrations/dropTables.js",
-    "db:seed": "babel-node ./server/database/seeds/migrate.js",
-    "db:refresh": "npm run db:drop && npm run start",
-    "db:create": "babel-node ./server/database/migrations/createTables.js"
+    "db:create": "babel-node ./server/database/migrations/migrate/up.js",
+    "db:drop": "babel-node ./server/database/migrations/migrate/down.js",
+    "db:seed": "babel-node ./server/database/seeds/seed.js",
+    "db:refresh": "npm run db:drop && npm run start"
   },
   "repository": {
     "type": "git",

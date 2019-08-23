@@ -1,10 +1,3 @@
-import db from '../../configs/db';
-
-// db.on('connect', () => {
-//   // eslint-disable-next-line no-console
-//   console.log('connected to the database...');
-// });
-
 export default {
 
   destroy: table => {

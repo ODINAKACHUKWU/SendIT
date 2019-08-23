@@ -18,7 +18,5 @@ const pool = new Pool({ connectionString });
 
 module.exports = {
   query: (text, params, callback) => pool.query(text, params, callback),
-  on: (text, callback) => pool.on(text, callback),
   connection: () => pool.connect(),
-  end: () => pool.end(),
 };

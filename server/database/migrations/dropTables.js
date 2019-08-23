@@ -1,29 +1,24 @@
 /* eslint-disable no-console */
 import db from '../../configs/db';
+import getTableName from '../../helpers/migration';
 
 const tables = ['users', 'parcels'];
+const user = `DROP TABLE IF EXISTS ${tables[0]} CASCADE`;
+const parcel = `DROP TABLE IF EXISTS ${tables[1]} CASCADE`;
 
-const dropTables = () => {
+const dropTables = async () => {
   try {
-    tables.forEach(async table => {
-      const res = await db.query(`DROP TABLE IF EXISTS ${table} CASCADE`);
-      if (res) {
-        const schema = table.split('(');
-        console.log(schema);
-        const tableName = schema[0];
-        const tableNameFirstLetter = tableName.charAt(0).toUpperCase();
-        const tableNameSubLetters = tableName.slice(1);
-        const tableFullName = `${tableNameFirstLetter}${tableNameSubLetters}`;
-        console.log(`${tableFullName} table successfully deleted from the database!`);
-      } else {
-        console.log('>>>', res);
+    const parcelTable = await db.query(parcel);
+    if (parcelTable) {
+      getTableName(tables[1]);
+      const userTable = await db.query(user);
+      if (userTable) {
+        getTableName(tables[0]);
       }
-    });
+    }
   } catch (error) {
     console.log(error.message);
-  } finally {
-    db.end();
   }
 };
 
-dropTables();
+export default dropTables;

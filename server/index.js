@@ -6,11 +6,14 @@ import cors from 'cors';
 import path from 'path';
 
 import router from './routes';
+import createTables from './database/migrations/createTables';
+import db from './configs/db';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3100;
+const isTest = process.env.NODE_ENV === 'test';
 
 app.use(logger('dev'));
 app.use(cors());
@@ -47,5 +50,21 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server listening on port ${PORT}...`);
 });
+
+if (!isTest) {
+  (async () => {
+    try {
+      const connect = await db.connection();
+      if (connect) {
+        // eslint-disable-next-line no-console
+        console.log('Connected to database...');
+        createTables();
+      }
+    } catch (err) {
+      throw err;
+    }
+  // eslint-disable-next-line no-console
+  })().catch(err => console.error(err.stack));
+}
 
 export default app;

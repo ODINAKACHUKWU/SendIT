@@ -124,7 +124,7 @@ class UserController {
         const account = results.rows[0];
 
         if (account) {
-          return res.status(400).send({
+          return res.status(409).send({
             status: 'Failure',
             message: `Account with the email address: ${email} already exist`,
           });
@@ -214,7 +214,7 @@ class UserController {
 
             return res.status(200).send({
               status: 'Success',
-              message: `${user.first_name} ${user.last_name} is Logged in`,
+              message: `${user.first_name} ${user.last_name} is logged in`,
               token,
             });
           }

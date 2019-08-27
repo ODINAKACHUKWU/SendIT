@@ -1,11 +1,14 @@
 module.exports = {
   httpResponse: (res, responseObject) => {
-    const { statusCode, success, message, ...data } = responseObject;
-    return res.status(statusCode).json({ success, message, ...data });
+    const { statusCode, status, message, ...data } = responseObject;
+    return res.status(statusCode).json({ status, message, ...data });
   },
 
   serverError: (res, error) => {
     const { message } = error;
-    return res.status(statusCode).json({ success: false, message: process.env.NODE_ENV === 'production' ? 'Oops! An error occured.' : message });
+    const isProd = process.env.NODE_ENV === 'production';
+    return res
+      .status(error.status || 500)
+      .json({ status: 'failure', message: isProd ? 'Oops! An error occured.' : message });
   },
 };

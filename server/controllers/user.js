@@ -169,7 +169,7 @@ class UserController {
    * @param {object} res
    * @returns {string} return status code 200
    */
-  static loginUser(req, res) {
+  static async loginUser(req, res) {
     const { email, password } = req.body;
 
     pool.query(

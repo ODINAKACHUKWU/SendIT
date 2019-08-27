@@ -1,75 +1,169 @@
+[![License Badge](https://img.shields.io/badge/license-ISC-9cf.svg)](https://opensource.org/licenses/MIT)
+[![License Badge](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Code Quality](https://img.shields.io/badge/Protected_by-Hound-a873d1.svg)](https://houndci.com)
+[![Build Status](https://travis-ci.org/ODINAKACHUKWU/SendIT.svg?branch=develop)](https://travis-ci.org/ODINAKACHUKWU/SendIT)
+[![Coverage Status](https://coveralls.io/repos/github/ODINAKACHUKWU/SendIT/badge.svg?branch=develop)](https://coveralls.io/github/ODINAKACHUKWU/SendIT?branch=develop)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0af4f56620958ae7224a/maintainability)](https://codeclimate.com/github/ODINAKACHUKWU/SendIT/maintainability)
+
 # SendIT API
 
-[![](https://img.shields.io/badge/Protected_by-Hound-a873d1.svg)](https://houndci.com)
-[![Build Status](https://travis-ci.org/ODINAKACHUKWU/SendIT.svg?branch=develop)](https://travis-ci.org/ODINAKACHUKWU/SendIT)
-[![Coverage Status](https://coveralls.io/repos/github/ODINAKACHUKWU/SendIT/badge.svg)](https://coveralls.io/github/ODINAKACHUKWU/SendIT?branch=develop)
-[![Maintainability](https://api.codeclimate.com/v1/badges/0af4f56620958ae7224a/maintainability)](https://codeclimate.com/github/ODINAKACHUKWU/SendIT/maintainability)
+This is SendIT API built with [NodeJS](https://nodejs.org/). 
+
+## Table of Contents
+
+- [About SendIT](#About-SendIT "Goto About-SendIT")
+- [Features](#Features "Goto Features")
+- [Getting Started](#Getting-Started "Goto Getting-Started")
+  - [Technology Stack](#Technology-Stack "Goto Technology-Stack")
+  - [Prerequisites](#Prerequisites "Goto Prerequisites")
+  - [Installation](#Installation "Goto Installation")
+- [Usage](#Usage "Goto Usage")
+- [Testing](#Testing "Goto Testing")
+- [Questions](#Questions "Goto Questions")
+- [Support or Contributions](#Support-or-Contributions "Goto Support-or-Contributions")
+- [Link to the deployed application](#Link-to-the-deployed-application "Goto Link to the deployed application")
+- [License](#License "Goto License")
+
+## About SendIT
 
 SendIT is a courier service that helps users deliver parcels to different destinations. It provides courier quotes based on weight categories.
 
-# Features
+## Features
 
-<ul>
-  <li>Users can create an account and log in.</li>
-  <li>Users can create a parcel delivery order.</li>
-  <li>Users can change the destination of a parcel delivery order.</li>
-  <li>Users can cancel a parcel delivery order.</li>
-  <li>Users can see the details of a delivery order.</li>
-  <li>Admin can change the status and present location of a parcel delivery order.</li>
-</ul>
+- Users can create an account.
+- Users can log in.
+- Users can create a parcel delivery order.
+- Users can see all their parcel delivery orders.
+- Users can change the destination of a parcel delivery order.
+- Users can cancel a parcel delivery order.
+- Users can see the details of a parcel delivery order.
+- Admin can change the status of a parcel delivery order.
+- Admin can change the location of a parcel delivery order.
+- Super admin can assign an admin role to a user and vice versa.
 
-# List of API endpoints for this application 
+## Getting Started
 
-<ul>
-  <li>POST /auth/signup</li>
-  <li>POST /auth/login</li>
-  <li>GET /parcels</li>
-  <li>POST /parcels</li>
-  <li>GET /parcels/:id</li>
-  <li>PUT /parcels/:id/cancel</li>
-  <li>PUT /parcels/:id/destination</li>
-  <li>GET /users/:id/parcels</li>
-  <li>GET /users</li>
-  <li>GET /users/:id</li>
-  <li>PUT /parcels/:id/status</li>
-  <li>PUT /parcels/:id/presentLocation</li>
-  <li>DEL /parcels/:id/delete</li>
-  <li>PUT /users/:id/role</li>
-  <li>GET /users/:id/all</li>
-  <li>GET /users/:id/deliver</li>
-  <li>GET /users/:id/pending</li>
-  <li>PUT /users/:id/regular</li>
-</ul>
+The client folder in this project contains a UI built with HTML and CSS that consumes the API using vanilla javascript. However, to consume the API, you will need a frontend application.
 
-# CRUD functionalities of the API endpoints for this application
+### Technology Stack
 
-<ul>
-  <li><b>`POST /auth/signup`:</b> signs up a user.</li>
-  <li><b>`POST /auth/login`:<b> logs in a user into the application.</li>
-  <li><b>`GET /parcels`:</b> fetches all parcel delivery orders created by the user.</li>
-  <li><b>`POST /parcels`:</b> creates a new parcel delivery order.</li>
-  <li><b>`GET /parcels/:id`:</b> fetches a parcel delivery order with its id.</li>
-  <li><b>`PUT /parcels/:id/cancel`:</b> cancels a particular delivery order if it has not been delivered. This functionality is reserved for the user who created the parcel delivery orer.</li>
-  <li><b>`PUT /parcels/:id/destination`:</b> updates the destination of a parcel delivery order if it has not been delivered or cancelled. This functionality is reserved for the user who created the parcel delivery order.</li>
-  <li><b>`GET /users/:id/parcels`:</b> fetches all parcel delivery orders by a particular user with the user's id.</li>
-  <li><b>`GET /users`:</b> fatches all users.</li>
-  <li><b>`GET /users/:id`:</b> fetches a particular user with user's id.</li>
-  <li><b>`PUT /parcels/:id/status`:</b> updates the status of a parcel delivery order to delivered if it has not been either delivered or cancelled. This functionality is specifically reserved for an admin user.</li>
-  <li><b>`PUT /parcels/:id/presentLocation`:</b> updates the location of a parcel delivery order if it has not been either delivered or canccelled. This functionality is reserved for an admin user.</li>
-  <li><b>`DEL /parcels/:id/delete`:</b> deletes a parcel delivery order that has been either cancelled or delivered. This functionality is reserved for the user who created the parcel delivery order.</li>
-  <li><b>`PUT /users/:id/role`:</b> updates the role of a user to Admin. This functionality is reserved for an admin user.</li>
-  <li><b>`GET /users/:id/all`:</b> fetches the total of all parcel delivery orders created by a particular user with the user's id.</li>
-  <li><b>`GET /users/:id/deliver`:</b> fetches the total of all parcel delivery orders created by a particular user that have been delivered.</li>
-  <li><b>`GET /users/:id/pending`:</b> fetches the total of all parcel delivery orders created by a particular user that are yet to be delivered.</li>
-  <li><b>`PUT /users/:id/regular`:</b> updates the role of a user to Regular. This functionality is reserved for an admin user.</li>
-</ul>
+- [NodeJS](https://nodejs.org/)
+- [Express](https://expressjs.com/)
+- [PostgreSQL](https://www.postgresql.org)
 
+### Prerequisites
 
+Prior to cloning this repository, you should have node, npm and PostgreSQL installed on your machine.
 
-# Links to the deployed application
+- To verify the installation of node, run the command:
+```
+$ nodejs --version
+```
+```
+Output
+# Subject to version installed
 
-<ul>
-  <li>https://solomon-sendit-api.herokuapp.com/api/v1</li>
-  <li>https://odinakachukwu.github.io/SendIT/UI/index.html</li>
-</ul>
+v10.15.0
+```
+- To be able to download npm packages, you also need to install npm, the Node.js package manager. Verify npm installation by running the command:
 
+```
+$ npm --version
+```
+```
+Output:
+# Subject to version installed
+
+6.10.2
+```
+- Verify the installation of PostgreSQL with any of the commands:
+```
+$ psql --version
+$ postgres --version
+```
+```
+Output:
+# Subject to version installed
+
+postgres (PostgreSQL) 11.2
+```
+
+### Installation
+
+Step 1. Clone the repository
+```
+git clone https://github.com/ODINAKACHUKWU/SendIT.git
+```
+Step 2. Change directory into the root of the project directory
+```
+cd SendIT
+```
+Step 3. Install project dependecies
+```
+npm install
+```
+Step 4. Setup database
+- You wll find an `.env.sample` file in the root directory of the project. Rename this file to `.env` and `add your own environment variables and secretKeys`. This file will now look something like this:
+```JS
+PORT=5000
+
+DEV_DATABASE_URL=postgresql://PG_USER:PG_PASSWORD@PG_HOST:PG_PORT/PG_NAME
+TEST_DATABASE_URL=postgresql://postgres:BERchmans100@localhost:5432/sendit-test
+
+JWT_SECRET=bsj7HEjebfj5jnosunr9
+JWT_ISSUER=ISSUER_NAME
+JWT_EXPIRY_TIME=DURATION
+```
+Step 5. You can start the application in different modes:
+
+- Production
+`npm run start-prod`
+
+- Development
+`npm start`
+
+## Usage
+
+To see usage and API endpoints, please view API Documentation [here](https://solomonezeobika.docs.apiary.io/).
+
+## Testing
+
+Testing is achieved through use of `chai-http`, `mocha` and `chai` packages. `chai-http` is used to make requests to the api. `mocha` is the testing framework and `chai` is the assertion library. They will both be installed when you run `npm install`.
+
+To test the application, while within the project root directory run the command:
+`npm test` 
+
+## Questions
+
+Contact: ODINAKACHUKWU SOLOMON EZEOBIKA - `solomonzbk@gmail.com`
+
+## Support or Contributions
+
+Support or Contributions are highly appreciated. Please send me an email for any suggestion, support or issue. To contribute:
+
+- Fork this repository or clone the repository with the command:
+   `$ git clone https://github.com/ODINAKACHUKWU/SendIT.git`.
+
+- Change directory into the root of the project directory.
+
+- Create your feature branch and make your contributions to your local copy of the project.
+
+- Raise a pull request against the develop branch describing what your feature does and how it can be tested.
+
+## Link to the deployed application
+
+- https://solomon-sendit-api.herokuapp.com/api/v1
+
+## License
+```
+Monday, 26 August, 2019 05:23PM 
+MIT License
+
+Copyright (c) 2019 ODINAKACHUKWU EZEOBIKA
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```

@@ -32,7 +32,7 @@ describe('User authentication test', () => {
         .end((err, res) => {
           expect(res.statusCode).to.equal(201);
           expect(res.body).to.be.an('object');
-          expect(res.body.status).to.equal('Success');
+          expect(res.body.status).to.equal('success');
           expect(res.body)
             .to.haveOwnProperty('status')
             .to.be.a('string');
@@ -58,11 +58,11 @@ describe('User authentication test', () => {
         .end((err, res) => {
           expect(res.statusCode).to.equal(409);
           expect(res.body).to.be.an('object');
-          expect(res.body.status).to.equal('Failure');
+          expect(res.body.status).to.equal('failure');
           expect(res.body)
             .to.haveOwnProperty('message')
             .to.be.a('string');
-          expect(res.body.message).to.equal('Account with the email address: test@email.com already exist');
+          expect(res.body.message).to.equal('Email has already been used');
           done();
         });
     });
@@ -80,7 +80,7 @@ describe('User authentication test', () => {
         .end((err, res) => {
           expect(res.statusCode).to.equal(200);
           expect(res.body).to.be.an('object');
-          expect(res.body.status).to.equal('Success');
+          expect(res.body.status).to.equal('success');
           expect(res.body)
             .to.haveOwnProperty('message')
             .to.be.a('string');
@@ -103,11 +103,11 @@ describe('User authentication test', () => {
         .end((err, res) => {
           expect(res.statusCode).to.equal(400);
           expect(res.body).to.be.an('object');
-          expect(res.body.status).to.equal('Failure');
+          expect(res.body.status).to.equal('failure');
           expect(res.body)
             .to.haveOwnProperty('message')
             .to.be.a('string');
-          expect(res.body.message).to.equal('Invalid credentials');
+          expect(res.body.message).to.equal('Invalid login credentials');
           done();
         });
     });
@@ -123,11 +123,11 @@ describe('User authentication test', () => {
         .end((err, res) => {
           expect(res.statusCode).to.equal(400);
           expect(res.body).to.be.an('object');
-          expect(res.body.status).to.equal('Failure');
+          expect(res.body.status).to.equal('failure');
           expect(res.body)
             .to.haveOwnProperty('message')
             .to.be.a('string');
-          expect(res.body.message).to.equal('Invalid credentials');
+          expect(res.body.message).to.equal('Invalid login credentials');
           done();
         });
     });

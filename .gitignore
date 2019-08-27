@@ -4,3 +4,6 @@ build/
 coverage/
 .env
 .DS_Store
+
+# Ignore until properly refactored
+client/

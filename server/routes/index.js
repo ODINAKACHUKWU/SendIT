@@ -5,6 +5,7 @@ import UserController from '../controllers/user';
 import { validSignup, validLogin } from '../middleware/validateuser';
 import validParcel from '../middleware/validateparcel';
 import AuthenticateUser from '../middleware/auth';
+import AuthenticationController from '../controllers/auth';
 
 const router = express.Router();
 
@@ -38,9 +39,9 @@ router.get('/users', AuthenticateUser.verifyToken, UserController.getAllUsers);
 
 router.get('/users/:id', AuthenticateUser.verifyToken, UserController.getUserById);
 
-router.post('/auth/signup', validSignup, UserController.registerUser);
+router.post('/auth/signup', validSignup, AuthenticationController.signupUser);
 
-router.post('/auth/login', validLogin, UserController.loginUser);
+router.post('/auth/login', validLogin, AuthenticationController.loginUser);
 
 router.put('/users/:id/role', AuthenticateUser.verifyToken, UserController.assignAdmin);
 

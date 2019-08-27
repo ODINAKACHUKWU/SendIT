@@ -3,7 +3,8 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import path from 'path';
+import { httpResponse } from './helpers/http';
+// import path from 'path';
 
 import router from './routes';
 import createTables from './database/migrations/createTables';
@@ -12,13 +13,15 @@ import db from './configs/db';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3100;
+const port = process.env.PORT || 3100;
 const isTest = process.env.NODE_ENV === 'test';
 
 app.use(logger('dev'));
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../client')));
+
+// uncomment after refactoring the client folder
+// app.use(express.static(path.join(__dirname, '../client')));
 app.use('/api/v1', router);
 
 app.get('/', (req, res) => {
@@ -32,23 +35,21 @@ app.get('/', (req, res) => {
             `);
 });
 
-app.get('/api/v1', (req, res) => {
-  res.status(200).send({
-    status: 'Success',
-    message: 'Connected to SendIT v1 API',
-  });
-});
+app.get('/api/v1', (req, res) => httpResponse(res, {
+  statusCode: 200,
+  status: 'success',
+  message: 'Connected to SendIT v1 API',
+}));
 
-app.get('*', (req, res) => {
-  res.status(400).json({
-    status: 'Failure',
-    message: 'Oops! Not found',
-  });
-});
+app.get('*', (req, res) => httpResponse(res, {
+  statusCode: 400,
+  status: 'failure',
+  message: 'Oops! Not found',
+}));
 
-app.listen(PORT, () => {
+app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server listening on port ${PORT}...`);
+  console.log(`Server listening on port ${port}...`);
 });
 
 if (!isTest) {
@@ -63,7 +64,7 @@ if (!isTest) {
     } catch (err) {
       throw err;
     }
-  // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
   })().catch(err => console.error(err.stack));
 }
 

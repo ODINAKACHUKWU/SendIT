@@ -2,7 +2,7 @@ import User from '../database/queries/user.db';
 import { httpResponse, serverError } from '../helpers/http';
 import jwt from '../helpers/jwt';
 import { comparePassword } from '../helpers/password';
-import configs from '../configs/jwt';
+import configs from '../configs/jwtConfig';
 
 const { generateToken } = jwt;
 const failureResponses = [

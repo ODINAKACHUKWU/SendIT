@@ -1,8 +1,8 @@
 import chaiHttp from 'chai-http';
 import chai, { expect } from 'chai';
+import db from ',,/../../server/configs/dbConfig';
 import app from '../../../server/index';
 import userData from '../fixtures/userData';
-import db from ',,/../../server/configs/db';
 import createTables from '../../../server/database/migrations/createTables';
 import dropTables from '../../../server/database/migrations/dropTables';
 

@@ -92,15 +92,15 @@ postgres (PostgreSQL) 11.2
 
 Step 1. Clone the repository
 ```
-git clone https://github.com/ODINAKACHUKWU/SendIT.git
+$ git clone https://github.com/ODINAKACHUKWU/SendIT.git
 ```
 Step 2. Change directory into the root of the project directory
 ```
-cd SendIT
+$ cd SendIT
 ```
 Step 3. Install project dependecies
 ```
-npm install
+$ npm install
 ```
 Step 4. Setup database
 - You wll find an `.env.sample` file in the root directory of the project. Rename this file to `.env` and `add your own environment variables and secretKeys`. This file will now look something like this:
@@ -117,21 +117,25 @@ JWT_EXPIRY_TIME=DURATION
 Step 5. You can start the application in different modes:
 
 - Production
-`npm run start-prod`
+`$ npm run start-prod`
 
 - Development
-`npm start`
+`$ npm start`
 
 ## Usage
 
-To see usage and API endpoints, please view API Documentation [here](https://solomonezeobika.docs.apiary.io/).
+This API is versioned. Thus, ensure to add `api/v1` while calling the endpoints. For example:
+```
+https://solomon-sendit-api.herokuapp.com/api/v1/auth/signup
+```
+To see all API endpoints, please visit API Documentation [here](https://solomonezeobika.docs.apiary.io/).
 
 ## Testing
 
-Testing is achieved through use of `chai-http`, `mocha` and `chai` packages. `chai-http` is used to make requests to the api. `mocha` is the testing framework and `chai` is the assertion library. They will both be installed when you run `npm install`.
+Testing is achieved with `chai-http`, `mocha` and `chai` packages. `chai-http` is used to make requests to the api. `mocha` is the testing framework and `chai` is the assertion library. They will both be installed when you run `$ npm install`.
 
 To test the application, while within the project root directory run the command:
-`npm test` 
+`$ npm test` 
 
 ## Questions
 
@@ -152,7 +156,7 @@ Support or Contributions are highly appreciated. Please send me an email for any
 
 ## Link to the deployed application
 
-- https://solomon-sendit-api.herokuapp.com/api/v1
+- https://solomon-sendit-api.herokuapp.com
 
 ## License
 ```

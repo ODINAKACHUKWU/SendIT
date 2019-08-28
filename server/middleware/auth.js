@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import pool from '../configs/db';
+import pool from '../configs/dbConfig';
 
 const AuthenticateUser = {
 

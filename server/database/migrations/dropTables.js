@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import db from '../../configs/db';
+import db from '../../configs/dbConfig';
 import getTableName from '../../helpers/migration';
 
 const tables = ['users', 'parcels'];

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import db from '../../configs/db';
+import db from '../../configs/dbConfig';
 import { userSchema, parcelSchema } from '../schemas';
 import getTableName from '../../helpers/migration';
 

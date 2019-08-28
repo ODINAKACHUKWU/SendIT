@@ -8,7 +8,7 @@ import { httpResponse } from './helpers/http';
 
 import router from './routes';
 import createTables from './database/migrations/createTables';
-import db from './configs/db';
+import db from './configs/dbConfig';
 
 dotenv.config();
 

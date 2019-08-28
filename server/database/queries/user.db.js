@@ -1,4 +1,4 @@
-import db from '../../configs/db';
+import db from '../../configs/dbConfig';
 import { hashPassword } from '../../helpers/password';
 
 class User {

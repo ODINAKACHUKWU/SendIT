@@ -1,4 +1,4 @@
-import pool from '../configs/db';
+import pool from '../configs/dbConfig';
 
 class ParcelController {
   /**
@@ -102,6 +102,7 @@ class ParcelController {
       decoded,
     } = req.body;
 
+    // eslint-disable-next-line max-len
     pool.query('INSERT INTO parcels (userid, sender, receiver, item, pickup_location, destination, schedule, present_location, price, order_status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
       [decoded.userId, sender, receiver, item,
         pickupLocation, destination, schedule, presentLocation, price,

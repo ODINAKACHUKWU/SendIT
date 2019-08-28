@@ -5,76 +5,49 @@ HOST: https://solomon-sendit-api.herokuapp.com/
 
 SendIT is a courier service that helps users deliver parcels to different destinations. It provides courier quotes based on weight categories.
 
-## Questions Collection [/questions]
+## Authentication [/auth]
 
-### List All Questions [GET]
+### Signup a New User [POST /api/v1/auth/signup]
 
-+ Response 200 (application/json)
-
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+You may signup a new user using this action. It takes a JSON
+object containing a user's credentials for the creation of a new account.
 
 + Request (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "firstName": "John",
+            "lastName": "Doe",
+            "phoneNumber": "07010000000",
+            "email": "john.doe@email.com",
+            "password": "john123",
+            "category": "Regular"
         }
 
 + Response 201 (application/json)
 
-    + Headers
+        {
+            "status": "success",
+            "message": "Account created for John Doe",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImNhdGVnb3J5IjoiUmVndWxhciIsImlhdCI6MTU2NzAwODQwOSwiZXhwIjoxNTY3MjY3NjA5LCJpc3MiOiJTZW5kSVQifQ.IgtwNGJFYjJSE2ORHAY0xz8mstOzInZbJY-QXOzJlxI"
+        }
+        
 
-            Location: /questions/2
+### Login a User [POST /api/v1/auth/login]
 
-    + Body
+You may login a user using this action. It takes a JSON
+object containing a user's credentials.
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
++ Request (application/json)
+
+        {
+            "email": "john.doe@email.com",
+            "password": "john123"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": "success",
+            "message": "John Doe is logged in",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImNhdGVnb3J5IjoiUmVndWxhciIsImlhdCI6MTU2NzAwODU1NywiZXhwIjoxNTY3MjY3NzU3LCJpc3MiOiJTZW5kSVQifQ.DQUZjnTv6ssYjQVeG3bvPTHQ5mWJlI_-SaEQY5xOPyg"
+        }

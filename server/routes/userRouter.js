@@ -1,15 +1,23 @@
-import { Router } from 'express';
-import UserController from '../controllers/userController';
-import AuthenticateUser from '../middleware/auth';
+import { Router } from "express";
+import UserController from "../controllers/userController";
+import { validRole } from "../middleware/validateuser";
+import auth from "../middleware/auth";
+
+const { verifyToken, verifyUserRole, verifyUser, verifyUserStatus } = auth;
 
 const userRouter = Router();
 
-userRouter.get('/', AuthenticateUser.verifyToken, UserController.getAllUsers);
+userRouter.get("/", verifyToken, verifyUserRole, UserController.getAllUsers);
 
-userRouter.get('/:id', AuthenticateUser.verifyToken, UserController.getUserById);
+userRouter.get("/:id", verifyToken, verifyUser, UserController.getUserById);
 
-userRouter.put('/:id/role', AuthenticateUser.verifyToken, UserController.assignAdmin);
-
-userRouter.put('/:id/regular', AuthenticateUser.verifyToken, UserController.assignRegular);
+userRouter.put(
+  "/:id/role",
+  validRole,
+  verifyToken,
+  verifyUserRole,
+  verifyUserStatus,
+  UserController.assignUserRole
+);
 
 export default userRouter;

@@ -1,48 +1,72 @@
-import jwt from 'jsonwebtoken';
-import pool from '../configs/dbConfig';
+import configs from "../configs/jwtConfig";
+import jwt from "../helpers/jwt";
+import http from "../helpers/http";
 
-const AuthenticateUser = {
+const { httpResponse, serverError } = http;
+const { decodeToken } = jwt;
 
-  verifyToken(req, res, next) {
-    const token = req.headers['x-access-token'];
+export default {
+  verifyToken: async (req, res, next) => {
+    const token = req.headers["x-access-token"];
     if (!token) {
-      return res.status(401).send({
-        status: 'Failure',
-        message: 'Token is not provided',
+      return httpResponse(res, {
+        statusCode: 401,
+        status: "failure",
+        message: "Token is not provided"
       });
     }
-
-    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-      if (error) {
-        return res.status(401).send({
-          status: 'Failure',
-          message: 'Invalid token provided',
-        });
-      }
-
-      pool.query('SELECT * FROM users WHERE userid = $1', [decoded.userId],
-        (err, results) => {
-          if (err) {
-            return res.status(500).send({
-              status: 'Failure',
-              message: err.message,
-            });
-          }
-
-          const user = results.rows[0];
-
-          if (!user) {
-            return res.status(400).send({
-              status: 'Failure',
-              message: 'The token you provided is invalid',
-            });
-          }
-
-          req.body.decoded = decoded;
-          next();
-        });
-    });
+    try {
+      const decoded = await decodeToken(token, configs);
+      req.user = decoded;
+      next();
+    } catch (error) {
+      return serverError(res, error);
+    }
   },
-};
 
-export default AuthenticateUser;
+  verifyUserRole: (req, res, next) => {
+    const {
+      user: { category }
+    } = req;
+    if (category !== "Admin") {
+      return httpResponse(res, {
+        statusCode: 403,
+        status: "failure",
+        message: "User is not an admin"
+      });
+    }
+    next();
+  },
+
+  verifyUser: (req, res, next) => {
+    const {
+      user: { userId, category }
+    } = req;
+    const id = parseInt(req.params.id, 10);
+    if (userId !== id && category !== "Admin") {
+      return httpResponse(res, {
+        statusCode: 403,
+        status: "failure",
+        message: "User is not authorized to access this resource"
+      });
+    }
+    req.user.id = id;
+    next();
+  },
+
+  verifyUserStatus: (req, res, next) => {
+    const {
+      user: { userId }
+    } = req;
+    const id = parseInt(req.params.id, 10);
+    if (userId === id) {
+      return httpResponse(res, {
+        statusCode: 403,
+        status: "failure",
+        message: "User is not authorized to complete this request"
+      });
+    }
+    req.user.id = id;
+    next();
+  }
+};

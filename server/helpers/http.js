@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   httpResponse: (res, responseObject) => {
     const { statusCode, status, message, ...data } = responseObject;
     return res.status(statusCode).json({ status, message, ...data });

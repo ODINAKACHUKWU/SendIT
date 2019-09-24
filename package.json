@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node server/index.js",
-    "test": "export NODE_ENV=test && nyc mocha --require @babel/register tests/index.spec.js --exit",
+    "test": "export NODE_ENV=test && nyc mocha --timeout 100000 --require @babel/register tests/index.spec.js --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "heroku-postbuild": "babel ./server -d ./build",
     "build": "npm run clean && babel ./server -d ./build",

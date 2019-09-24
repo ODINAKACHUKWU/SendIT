@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'test') {
 
 const pool = new Pool({ connectionString });
 
-module.exports = {
+export default {
   query: (text, params, callback) => pool.query(text, params, callback),
   connection: () => pool.connect(),
 };

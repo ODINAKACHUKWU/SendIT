@@ -1,243 +1,100 @@
-import pool from '../configs/dbConfig';
+import pool from "../configs/dbConfig";
+import http from "../helpers/http";
+import User from "../database/queries/user.db";
+
+const { httpResponse, serverError } = http;
 
 class UserController {
   /**
-   * Get all users
-   * @param {object} req
-   * @param {object} res
-   * @returns {array} return status code 200
+   * @method getAllUsers
+   * @memberof UserController
+   * @description Fetches all the users
+   * @param {object} req HTTP request object
+   * @param {object} res HTTP response object
+   * @returns {object} API response object
    */
-  static getAllUsers(req, res) {
-    const { decoded } = req.body;
-
-    if (decoded.category !== 'Admin') {
-      return res.status(403).send({
-        status: 'Failure',
-        message: 'You are not an admin',
-      });
-    }
-
-    pool.query(
-      'SELECT UserID, first_name, last_name, phone_number, email, category FROM users ORDER BY userId ASC',
-      (error, results) => {
-        if (error) {
-          return res.status(500).send({
-            status: 'Failure',
-            message: error.message,
-          });
-        }
-
-        const users = results.rows;
-
-        if (users.length === 0) {
-          return res.status(200).send({
-            status: 'Success',
-            message: 'There is no user',
-            data: users,
-          });
-        }
-        return res.status(200).send({
-          status: 'Success',
-          message: 'Users retrieved',
-          data: users,
+  static async getAllUsers(req, res) {
+    try {
+      const users = await User.findAll();
+      if (users) {
+        return httpResponse(res, {
+          statusCode: 200,
+          status: "success",
+          message: "Users retrieved",
+          data: users[0]
         });
-      },
-    );
-  }
-
-  /**
-   * Get a user
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} return status code 200
-   */
-  static getUserById(req, res) {
-    const id = parseInt(req.params.id, 10);
-    const { decoded } = req.body;
-
-    if (decoded.userId !== id && decoded.category !== 'Admin') {
-      return res.status(403).send({
-        status: 'Failure',
-        message: 'You are not an admin',
+      }
+      return httpResponse(res, {
+        statusCode: 200,
+        status: "success",
+        message: "There are no users"
       });
+    } catch (error) {
+      return serverError(res, error);
     }
+  }
 
-    pool.query(
-      'SELECT UserID, first_name, last_name, phone_number, email, category FROM users WHERE userId = $1',
-      [id],
-      (error, results) => {
-        if (error) {
-          return res.status(500).send({
-            status: 'Failure',
-            message: error.message,
-          });
-        }
-
-        const user = results.rows[0];
-
-        if (!user) {
-          return res.status(404).send({
-            status: 'Failure',
-            message: 'User not found',
-          });
-        }
-        return res.status(200).send({
-          status: 'Success',
-          message: 'User retrieved',
-          data: user,
+  /**
+   * @method getUserById
+   * @memberof UserController
+   * @description Fetches a user by id
+   * @param {object} req HTTP request object
+   * @param {object} res HTTP response object
+   * @returns {object} API response object
+   */
+  static async getUserById(req, res) {
+    const {
+      user: { id }
+    } = req;
+    try {
+      const user = await User.findById(id);
+      if (user) {
+        return httpResponse(res, {
+          statusCode: 200,
+          status: "success",
+          message: "User retrieved",
+          data: user
         });
-      },
-    );
+      }
+      return httpResponse(res, {
+        statusCode: 404,
+        status: "failure",
+        message: "User not found"
+      });
+    } catch (error) {
+      return serverError(res, error);
+    }
   }
 
   /**
-   * Update user role to Admin
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} return status code 200
+   * @method assignUserRole
+   * @memberof UserController
+   * @description Assigns regular or admin role to a user
+   * @param {object} req HTTP request object
+   * @param {object} res HTTP response object
+   * @returns {object} API response object
    */
-  static assignAdmin(req, res) {
-    const id = parseInt(req.params.id, 10);
-    const { category, decoded } = req.body;
-
-    pool.query(
-      'SELECT * FROM users WHERE userid = $1',
-      [id],
-      (error, results) => {
-        if (error) {
-          return res.status(500).send({
-            status: 'Failure',
-            message: error.message,
-          });
-        }
-
-        const user = results.rows[0];
-
-        if (!user) {
-          return res.status(404).send({
-            status: 'Failure',
-            message: 'User not found',
-          });
-        }
-
-        if (user) {
-          if (decoded.category !== 'Admin') {
-            return res.status(403).send({
-              status: 'Failure',
-              message: 'You are not an admin',
-            });
-          }
-
-          if (decoded.userId === user.userid) {
-            return res.status(403).send({
-              status: 'Failure',
-              message: 'You are an Admin',
-            });
-          }
-
-          if (user.category === 'Admin') {
-            return res.status(403).send({
-              status: 'Failure',
-              message: 'User is an Admin',
-            });
-          }
-
-          pool.query(
-            'UPDATE users SET category = $1 WHERE userid = $2 RETURNING UserID, first_name, last_name, phone_number, email, category',
-            [category, id],
-            (err, result) => {
-              if (err) {
-                return res.status(500).send({
-                  status: 'Failure',
-                  message: err.message,
-                });
-              }
-
-              return res.status(200).send({
-                status: 'Success',
-                message: "User's category has been changed to Admin",
-                data: result.rows[0],
-              });
-            },
-          );
-        }
-      },
-    );
-  }
-
-  /**
-   * Update user role to Regular
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} return status code 200
-   */
-  static assignRegular(req, res) {
-    const id = parseInt(req.params.id, 10);
-    const { category, decoded } = req.body;
-
-    pool.query(
-      'SELECT * FROM users WHERE userid = $1',
-      [id],
-      (error, results) => {
-        if (error) {
-          return res.status(500).send({
-            status: 'Failure',
-            message: error.message,
-          });
-        }
-
-        const user = results.rows[0];
-
-        if (!user) {
-          return res.status(404).send({
-            status: 'Failure',
-            message: 'User not found',
-          });
-        }
-
-        if (user) {
-          if (decoded.category !== 'Admin') {
-            return res.status(403).send({
-              status: 'Failure',
-              message: 'You are not an admin',
-            });
-          }
-
-          if (decoded.userId === user.userid) {
-            return res.status(403).send({
-              status: 'Failure',
-              message: 'You are not authorized to change your role!',
-            });
-          }
-
-          if (user.category === 'Regular') {
-            return res.status(403).send({
-              status: 'Failure',
-              message: 'User is a Regular',
-            });
-          }
-
-          pool.query(
-            'UPDATE users SET category = $1 WHERE userid = $2 RETURNING UserID, first_name, last_name, phone_number, email, category',
-            [category, id],
-            (err, result) => {
-              if (err) {
-                return res.status(500).send({
-                  status: 'Failure',
-                  message: err.message,
-                });
-              }
-
-              return res.status(200).send({
-                status: 'Success',
-                message: "User's category has been changed to Regular",
-                data: result.rows[0],
-              });
-            },
-          );
-        }
-      },
-    );
+  static async assignUserRole(req, res) {
+    const { category } = req.body;
+    const userid = req.user.id;
+    try {
+      const user = await User.updateOne({ category, userid });
+      if (user) {
+        return httpResponse(res, {
+          statusCode: 200,
+          status: "success",
+          message: "Role successfully updated",
+          data: user
+        });
+      }
+      return httpResponse(res, {
+        statusCode: 404,
+        status: "failure",
+        message: "User not found"
+      });
+    } catch (error) {
+      return serverError(res, error);
+    }
   }
 }
 

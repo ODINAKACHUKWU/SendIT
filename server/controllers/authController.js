@@ -1,45 +1,64 @@
-import User from '../database/queries/user.db';
-import { httpResponse, serverError } from '../helpers/http';
-import jwt from '../helpers/jwt';
-import { comparePassword } from '../helpers/password';
-import configs from '../configs/jwtConfig';
+import User from "../database/queries/user.db";
+import http from "../helpers/http";
+import jwt from "../helpers/jwt";
+import { comparePassword } from "../helpers/password";
+import configs from "../configs/jwtConfig";
 
+const { httpResponse, serverError } = http;
 const { generateToken } = jwt;
 const failureResponses = [
   {
     statusCode: 400,
-    status: 'failure',
-    message: 'Invalid login credentials',
+    status: "failure",
+    message: "Invalid login credentials"
   },
   {
     statusCode: 409,
-    status: 'failure',
-    message: 'Email has already been used',
-  },
+    status: "failure",
+    message: "Email has already been used"
+  }
 ];
 
 class AuthenticationController {
   /**
    * @method signupUser
+   * @memberof AuthenticationController
    * @description Create a user account
    * @param {object} req HTTP request object
    * @param {object} res HTTP response object
    * @returns {object} API response object
    */
   static async signupUser(req, res) {
-    const { firstName, lastName, phoneNumber, email, password, category } = req.body;
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      password,
+      category
+    } = req.body;
     try {
       const user = await User.findByEmail(email);
       if (!user) {
-        const newUser = await User.create({ firstName, lastName, phoneNumber, email, password, category });
+        const newUser = await User.create({
+          firstName,
+          lastName,
+          phoneNumber,
+          email,
+          password,
+          category
+        });
         if (newUser) {
-          const payload = { userId: newUser.userid, category: newUser.category };
+          const payload = {
+            userId: newUser.userid,
+            category: newUser.category
+          };
           const token = await generateToken(payload, configs);
           return httpResponse(res, {
             statusCode: 201,
-            status: 'success',
+            status: "success",
             message: `Account created for ${newUser.first_name} ${newUser.last_name}`,
-            token,
+            token
           });
         }
       }
@@ -51,6 +70,7 @@ class AuthenticationController {
 
   /**
    * @method loginUser
+   * @memberof AuthenticationController
    * @description Log in a user
    * @param {object} req HTTP request object
    * @param {object} res HTTP response object
@@ -67,9 +87,9 @@ class AuthenticationController {
           const token = await generateToken(payload, configs);
           return httpResponse(res, {
             statusCode: 200,
-            status: 'success',
+            status: "success",
             message: `${user.first_name} ${user.last_name} is logged in`,
-            token,
+            token
           });
         }
         return httpResponse(res, failureResponses[0]);

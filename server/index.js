@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { httpResponse } from './helpers/http';
+import http from './helpers/http';
 // import path from 'path';
 
 import router from './routes';
@@ -13,8 +13,9 @@ import db from './configs/dbConfig';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3100;
+const port = process.env.PORT || 5000;
 const isTest = process.env.NODE_ENV === 'test';
+const { httpResponse } = http;
 
 app.use(logger('dev'));
 app.use(cors());

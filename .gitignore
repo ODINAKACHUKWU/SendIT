@@ -3,7 +3,7 @@ node_modules/
 build/
 coverage/
 .env
-.DS_Store
+.DS_Store/
 
 # Ignore until properly refactored
 client/

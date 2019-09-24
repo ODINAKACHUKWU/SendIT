@@ -108,7 +108,7 @@ Step 4. Setup database
 PORT=5000
 
 DEV_DATABASE_URL=postgresql://PG_USER:PG_PASSWORD@PG_HOST:PG_PORT/PG_NAME
-TEST_DATABASE_URL=postgresql://postgres:BERchmans100@localhost:5432/sendit-test
+TEST_DATABASE_URL=postgresql://PG_USER:PG_PASSWORD@PG_HOST:PG_PORT/PG_TEST_NAME
 
 JWT_SECRET=bsj7HEjebfj5jnosunr9
 JWT_ISSUER=ISSUER_NAME
@@ -135,7 +135,17 @@ To see all API endpoints, please visit API Documentation [here](https://solomone
 Testing is achieved with `chai-http`, `mocha` and `chai` packages. `chai-http` is used to make requests to the api. `mocha` is the testing framework and `chai` is the assertion library. They will both be installed when you run `$ npm install`.
 
 To test the application, while within the project root directory run the command:
-`$ npm test` 
+`$ npm test`
+
+To test the API endpoints using Postman:
+
+Step 1. Install [Postman](https://www.getpostman.com/)
+
+Step 2. Test the endpoints using either of the methods below:
+
+- Run the command `$ npm start` to start the server. Then, send requests to the endpoints through `localhost:3100/api/v1/<endpoint>`.
+
+- Send requests directly to the deployed endpoints through `https://solomon-sendit-api.herokuapp.com/api/v1/<endpoint>`.
 
 ## Questions
 

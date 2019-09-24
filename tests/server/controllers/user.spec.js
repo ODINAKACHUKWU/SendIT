@@ -1,153 +1,150 @@
-import chaiHttp from 'chai-http';
-import chai, { expect } from 'chai';
-import app from '../../../server/index';
+import chaiHttp from "chai-http";
+import chai, { expect } from "chai";
+import app from "../../../server/index";
+import userData from "../fixtures/userData";
 
 chai.use(chaiHttp);
 
-describe('Authentication', () => {
-  it('should return a notification message if user is not verified', done => {
-    chai
+describe("Test for users API endpoints", () => {
+  const tokens = [];
+  beforeEach(async () => {
+    const resOne = await chai
       .request(app)
-      .put('/api/v1/parcels/10/cancel')
-      .set('content-type', 'appication/json')
-      .end((err, res) => {
-        expect(res.status).to.equal(401);
-        expect(res.body.message).to.equal('Token is not provided');
-        done();
+      .post("/api/v1/auth/signup")
+      .send({
+        ...userData,
+        email: "admin@test.com",
+        category: "Admin"
       });
+
+    const resTwo = await chai
+      .request(app)
+      .post("/api/v1/auth/signup")
+      .send({
+        ...userData,
+        email: "regular@email.com",
+        category: "Regular"
+      });
+
+    const resThree = await chai
+      .request(app)
+      .post("/api/v1/auth/login")
+      .send({
+        email: "test@email.com",
+        password: "john123"
+      });
+    tokens.push(JSON.parse(resOne.req.res.text).token);
+    tokens.push(JSON.parse(resTwo.req.res.text).token);
+    tokens.push(JSON.parse(resThree.req.res.text).token);
   });
 
-  // it('should return a notification message if user is not verified', (done) => {
-  //   chai.request(myApp)
-  //     .get('/parcels')
-  //     .set('content-type', 'appication/json')
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(401);
-  //       expect(res.body.message).to.equal('Token is not provided');
-  //       done();
-  //     });
-  // });
+  describe("GET /api/v1/users", () => {
+    it("should return all users in the system for an admin", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users")
+        .set("x-access-token", tokens[0])
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(200);
+          expect(res.body.status).to.equal("success");
+          expect(res.body.message).to.equal("Users retrieved");
+          done();
+        });
+    });
+
+    it("should not return users if no valid token is provided", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users")
+        .set("content-type", "appication/json")
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(401);
+          expect(res.body.status).to.equal("failure");
+          expect(res.body.message).to.equal("Token is not provided");
+          done();
+        });
+    });
+
+    it("should not return users if user is not an admin", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users")
+        .set("x-access-token", tokens[1])
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(403);
+          expect(res.body.status).to.equal("failure");
+          expect(res.body.message).to.equal("User is not an admin");
+          done();
+        });
+    });
+  });
+
+  describe("GET /api/v1/users/:id", () => {
+    it("should return a user by id for an admin", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users/1")
+        .set("x-access-token", tokens[0])
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(200);
+          expect(res.body.status).to.equal("success");
+          expect(res.body.message).to.equal("User retrieved");
+          done();
+        });
+    });
+
+    it("should not return a user if no valid token is provided", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users/1")
+        .set("content-type", "appication/json")
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(401);
+          expect(res.body.status).to.equal("failure");
+          expect(res.body.message).to.equal("Token is not provided");
+          done();
+        });
+    });
+
+    it("should not return the user if user is not an admin", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users/1")
+        .set("x-access-token", tokens[1])
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(403);
+          expect(res.body.status).to.equal("failure");
+          expect(res.body.message).to.equal(
+            "User is not authorized to access this resource"
+          );
+          done();
+        });
+    });
+
+    it("should not return the user if user is logged in", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users/1")
+        .set("x-access-token", tokens[2])
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(200);
+          expect(res.body.status).to.equal("success");
+          expect(res.body.message).to.equal("User retrieved");
+          done();
+        });
+    });
+
+    it("should not return not found if user doesn't exist", done => {
+      chai
+        .request(app)
+        .get("/api/v1/users/0")
+        .set("x-access-token", tokens[0])
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(404);
+          expect(res.body.status).to.equal("failure");
+          expect(res.body.message).to.equal("User not found");
+          done();
+        });
+    });
+  });
 });
-
-// // describe('Parcel API endpoints', () => {
-// //   it('should fetch all the parcels', (done) => {
-// //     chai.request(myApp)
-// //       .get('/api/v1/parcels')
-// //       .end((err, res) => {
-// //         res.should.have.status(200);
-// //         parcels.should.be.an('array');
-// //         parcels.should.have.lengthOf(3);
-// //         res.body.should.have.property('status').eq('Success');
-// //         res.body.should.have.property('message').eql('Parcels retrieved');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should fetch a parcel by id', (done) => {
-// //     chai.request(myApp)
-// //       .get('/api/v1/parcels/3')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(200);
-// //         res.body.should.have.property('status').eql('Success');
-// //         res.body.should.have.property('message').eql('Parcel retrieved');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should return a notification message if parcel is not found', (done) => {
-// //     chai.request(myApp)
-// //       .get('/api/v1/parcels/10')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(404);
-// //         res.body.should.have.property('status').eql('Failure');
-// //         res.body.should.have.property('message').eql('Parcel not found');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should not cancel a parcel if it has been cancelled', (done) => {
-// //     chai.request(myApp)
-// //       .put('/api/v1/parcels/3/cancel')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(200);
-// //         res.body.should.have.property('status').eql('Success');
-// //         res.body.should.have.property('message').eql('Parcel has been cancelled');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should not cancel a parcel if it has been delivered', (done) => {
-// //     chai.request(myApp)
-// //       .put('/api/v1/parcels/2/cancel')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(200);
-// //         res.body.should.have.property('status').eql('Success');
-// //         res.body.should.have.property('message').eql('Parcel has been delivered');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should cancel a parcel if it has neither been cancelled nor delivered', (done) => {
-// //     chai.request(myApp)
-// //       .put('/api/v1/parcels/1/cancel')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(200);
-// //         res.body.should.have.property('status').eql('Success');
-// //         res.body.should.have.property('message').eql('Parcel is cancelled');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should fetch all the users', (done) => {
-// //     chai.request(myApp)
-// //       .get('/api/v1/users')
-// //       .end((err, res) => {
-// //         res.should.have.status(200);
-// //         users.should.be.an('array');
-// //         users.should.have.lengthOf(3);
-// //         res.body.should.have.property('status').eq('Success');
-// //         res.body.should.have.property('message').eql('Users retrieved');
-// //         done();
-// //       });
-// //   });
-// //   it('should fetch a user by id', (done) => {
-// //     chai.request(myApp)
-// //       .get('/api/v1/users/3')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(200);
-// //         res.body.should.have.property('status').eql('Success');
-// //         res.body.should.have.property('message').eql('User retrieved');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should return a notification message if user is not found', (done) => {
-// //     chai.request(myApp)
-// //       .get('/api/v1/users/10')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(404);
-// //         res.body.should.have.property('status').eql('Failure');
-// //         res.body.should.have.property('message').eql('User not found');
-// //         done();
-// //       });
-// //   });
-
-// //   it('should return a notification message if parcel is not found', (done) => {
-// //     chai.request(myApp)
-// //       .put('/api/v1/parcels/10/location')
-// //       .end((err, res) => {
-// //         res.body.should.be.an('object');
-// //         res.should.have.status(404);
-// //         res.body.should.have.property('status').eql('Failure');
-// //         res.body.should.have.property('message').eql('No parcel found');
-// //         done();
-// //       });
-// //   });
-// });

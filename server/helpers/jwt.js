@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-module.exports = {
+export default {
   generateToken: (payload, configs) => {
     const { secret, ...options } = configs;
     try {
